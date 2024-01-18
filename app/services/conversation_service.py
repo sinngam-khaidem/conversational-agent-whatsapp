@@ -49,7 +49,7 @@ class RealtyaiBot:
         system_message: str = ("You are an AI personal assistant, specialised in all things retrieval and search."
             "Do your best to answer the questions at the end. Feel free to use any tools available to look up relevant information," 
             "only if necessary. Ask follow-up questions in case of vague or unclear questions, to get more information about what is being asked."
-            "Format your answer to increase readability and keep it short."),
+            "Format your answer into short points to increase readability. Always keep it short and precise."),
         verbose: bool = True,
     ):  
         self.whatsapp_version = whatsapp_version
@@ -91,7 +91,7 @@ class RealtyaiBot:
 
         ]
 
-        self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key,max_tokens=512, temperature=0.1)
+        self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key,max_tokens=256, temperature=0.1)
 
         # Create an instance of the DynamoDBSessionManagement to handle chat history, number of interaction etc.abs
         self.dynamodb = DynamoDBSessionManagement(
