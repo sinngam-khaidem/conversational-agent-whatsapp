@@ -45,6 +45,7 @@ QDRANT_COLLECTION_NAME = os.getenv("COLLECTION_NAME")
 WHATSAPP_ACCESS_TOKEN = os.getenv("WHATSAPP_ACCESS_TOKEN")
 WHATSAPP_PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_NUMBER_ID")
 WHATSAPP_VERSION = os.getenv("WHATSAPP_VERSION")
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 
 @myapp.get("/")
@@ -66,7 +67,7 @@ def post_embedd_pdf(embed_pdf_request: PdfFileRequest):
     try:
         with open(path_to_file, 'wb') as file:
             file.write(get_media_file_content_from_whatsapp(embed_pdf_request.media_id, WHATSAPP_VERSION, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID))
-        process_pdf_document(path_to_file, embed_pdf_request.senders_wa_id, embed_pdf_request.media_id, embed_pdf_request.caption, embed_pdf_request.filename, QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME)
+        process_pdf_document(path_to_file, embed_pdf_request.senders_wa_id, embed_pdf_request.media_id, embed_pdf_request.caption, embed_pdf_request.filename, QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
         write_file_to_s3(path_to_file, AWS_BUCKET_NAME, s3_object_key, AWS_ACCESS_KEY, AWS_SECRET_KEY)
     except Exception as e:
         logging.error(f"An error occurred while embedding pdf: {e}")
@@ -81,7 +82,7 @@ def post_embedd_url(embed_url_request: UrlRequest):
     logging.info("Embedding URL document.")
 
     try:
-        process_url_document(embed_url_request.url_address, embed_url_request.senders_wa_id, embed_url_request.caption, QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME)
+        process_url_document(embed_url_request.url_address, embed_url_request.senders_wa_id, embed_url_request.caption, QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
     except Exception as e:
         logging.error(f"An error occurred while embedding url: {e}")
     return JSONResponse(content={"status":"success"}, status_code=200)
@@ -92,7 +93,8 @@ def agent_call(agent_call_request: AgentCallRequest):
 
     realtyai_bot = RealtyaiBot(
             agent_call_request.senders_wa_id, 
-            OPENAI_API_KEY, 
+            OPENAI_API_KEY,
+            COHERE_API_KEY, 
             AWS_ACCESS_KEY, 
             AWS_SECRET_KEY,
             QDRANT_API_KEY,

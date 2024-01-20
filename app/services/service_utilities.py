@@ -54,7 +54,7 @@ def merge_docs_to_source(docs: List[Document]) -> List[str]:
     source_dict: Dict[str, int] = {}
 
     for doc in docs:
-        doc_source = doc.metadata["media_id"]
+        doc_source = doc.metadata.get("media_id", "_blank")
         if doc_source in source_dict.keys():
             source_dict[doc_source] += 1
         else:
