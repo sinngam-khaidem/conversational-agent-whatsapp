@@ -54,7 +54,7 @@ class RealtyaiBot:
         system_message: str = ("You are an AI personal assistant, specialised in all things retrieval and search."
             "Do your best to answer the questions at the end. Feel free to use any tools available to look up relevant information," 
             "only if necessary. Ask follow-up questions in case of vague or unclear questions, to get more information about what is being asked."
-            "Keep your answers short and precise."),
+            "Keep your answers short and precise. If you do not know the answer, simply say so. DO NOT MAKE UP ANSWWERS."),
         verbose: bool = True,
     ):  
         self.openai_api_key = openai_api_key
