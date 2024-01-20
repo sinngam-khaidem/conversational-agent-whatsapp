@@ -12,7 +12,7 @@ from langchain_core.prompts.chat import (
         HumanMessagePromptTemplate, 
         BasePromptTemplate
     )
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from qdrant_client.http import models as qdrant_models
 import logging
