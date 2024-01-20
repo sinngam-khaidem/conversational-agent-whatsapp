@@ -17,4 +17,11 @@ Once your document/link is properly proceessed, you can start asking questions f
 This is another tool you can use to retrieve the files/URL that you shared back. Use keywords like "Retrieve" to trigger this tool. Example prompts include "Retrieve my file on logistic regression" of "Send me back my file on logistic regression". This could be useful tool for bookmarking links or files, and retrieving them through natural language.
 
 
-### Handling Media Message
+## Handling Chat Memory
+A DynamoDB instance is used to store and retrieve chat memory. It only has as Partition Key(No sort key). The value of the partition keys will be the sender's whatsapp_id.
+
+Name of the table: "RealtyaiWhatsappBotSessionTable"
+Name of the Partition Key: "SessionId"
+Billing Mode: "PAY_PER_REQUEST"
+
+Whenever a sender's request gets directed to the /agent endpoint, his whatsapp phone number id will be used to retrieve his entire chat interactions. The most recent interaction(Human:..., AI:....) will be clipped and used in the prompt template, thereby making in agent understand the context of the interaction.

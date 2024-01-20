@@ -46,10 +46,11 @@ class RealtyaiBot:
         whatsapp_version: str = None,
         whatsapp_access_token: str = None,
         whatsapp_phone_number_id: str = None,
+        dynamo_db_table_name: str = None,
         system_message: str = ("You are an AI personal assistant, specialised in all things retrieval and search."
             "Do your best to answer the questions at the end. Feel free to use any tools available to look up relevant information," 
             "only if necessary. Ask follow-up questions in case of vague or unclear questions, to get more information about what is being asked."
-            "Format your answer into short points to increase readability. Always keep it short and precise."),
+            "Keep your answers short and precise."),
         verbose: bool = True,
     ):  
         self.whatsapp_version = whatsapp_version
@@ -95,7 +96,7 @@ class RealtyaiBot:
 
         # Create an instance of the DynamoDBSessionManagement to handle chat history, number of interaction etc.abs
         self.dynamodb = DynamoDBSessionManagement(
-                table_name="WhatsappChatbotSessionTable",
+                table_name=dynamo_db_table_name,
                 session_id=senders_wa_id,
                 aws_access_key_id = aws_access_key_id,
                 aws_secret_access_key= aws_secret_access_key

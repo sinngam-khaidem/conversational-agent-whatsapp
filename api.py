@@ -35,9 +35,10 @@ myapp = FastAPI()
 
 # Load the environment variables and qdrant collection name
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-AWS_ACCESS_KEY=os.getenv("PERSONAL_AWS_ACCESS_KEY_ID") 
-AWS_SECRET_KEY=os.getenv("PERSONAL_AWS_SECRET_ACCESS_KEY")
-AWS_BUCKET_NAME=os.getenv("PERSONAL_AWS_BUCKET_NAME")
+AWS_ACCESS_KEY=os.getenv("AWS_ACCESS_KEY_ID") 
+AWS_SECRET_KEY=os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_BUCKET_NAME=os.getenv("AWS_BUCKET_NAME")
+DYNAMODB_TABLE_NAME = os.getenv("DYNAMODB_TABLE_NAME")
 QDRANT_URL = os.getenv("QDRANT_URL")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 QDRANT_COLLECTION_NAME = os.getenv("COLLECTION_NAME")
@@ -99,7 +100,8 @@ def agent_call(agent_call_request: AgentCallRequest):
             QDRANT_COLLECTION_NAME,
             WHATSAPP_VERSION,
             WHATSAPP_ACCESS_TOKEN,
-            WHATSAPP_PHONE_NUMBER_ID
+            WHATSAPP_PHONE_NUMBER_ID,
+            DYNAMODB_TABLE_NAME
         )
     response = realtyai_bot(agent_call_request.message_body)
     response = process_text_for_whatsapp(response)
