@@ -89,7 +89,7 @@ class RealtyaiBot:
             Tool(
                 name="Rag",
                 func=self._rag,
-                description="Useful when you need to look for answers in documents, pdfs, text files, or webpages user shared in the past, and perform Retrieval Augmented Generation(RAG).",
+                description="Useful when you need to look for answers in documents, pdfs, text files, or webpages user shared in the past, and perform Retrieval Augmented Generation(RAG). This is by all means your default favourite tool.",
                 return_direct="True"
             ),
             # https://stackoverflow.com/questions/76364591/langchain-terminating-a-chain-on-specific-tool-output
