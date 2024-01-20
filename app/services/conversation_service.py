@@ -14,14 +14,17 @@ from langchain_core.prompts.chat import (
     )
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_functions_agent
-from qdrant_client.http import models as qdrant_models
 import logging
 import openai
 from langchain.globals import set_debug
 set_debug(False)
 
 from app.services.web_search_service.ddg_search_service import DDGWithVectorSearchWrappper
-from app.services.databases.qdrant_setup import load_qdrant_connection
+from app.services.databases.qdrant_setup import (
+    build_sentence_window_index,
+    build_sentence_window_query_engine,
+    load_qdrant_connection
+)
 from app.services.databases.dynamodb_setup import DynamoDBSessionManagement
 from app.services.service_utilities import (
         merge_docs_to_source, 
@@ -38,11 +41,12 @@ class RealtyaiBot:
         self,
         senders_wa_id: str = None,
         openai_api_key: str = None,
+        cohere_api_key:str = None,
         aws_access_key_id: str = None,
         aws_secret_access_key: str = None,
         qdrant_api_key: str = None,
         qdrant_url:str = None,
-        qdrant_collecion_name:str = None,
+        qdrant_collection_name:str = None,
         whatsapp_version: str = None,
         whatsapp_access_token: str = None,
         whatsapp_phone_number_id: str = None,
@@ -50,9 +54,14 @@ class RealtyaiBot:
         system_message: str = ("You are an AI personal assistant, specialised in all things retrieval and search."
             "Do your best to answer the questions at the end. Feel free to use any tools available to look up relevant information," 
             "only if necessary. Ask follow-up questions in case of vague or unclear questions, to get more information about what is being asked."
-            "Keep your answers short and precise."),
+            "Keep your answers short and precise. If you do not know the answer, simply say so. DO NOT MAKE UP ANSWWERS."),
         verbose: bool = True,
     ):  
+        self.openai_api_key = openai_api_key
+        self.cohere_api_key = cohere_api_key
+        self.qdrant_url = qdrant_url
+        self.qdrant_api_key = qdrant_api_key
+        self.qdrant_collection_name = qdrant_collection_name
         self.whatsapp_version = whatsapp_version
         self.whatsapp_access_token = whatsapp_access_token
         self.whatsapp_phone_number_id = whatsapp_phone_number_id
@@ -80,7 +89,8 @@ class RealtyaiBot:
             Tool(
                 name="Rag",
                 func=self._rag,
-                description="Useful when you need to look for answers in documents, pdfs, text files, or webpages user shared in the past, and perform Retrieval Augmented Generation(RAG)."
+                description="Useful when you need to look for answers in documents, pdfs, text files, or webpages user shared in the past, and perform Retrieval Augmented Generation(RAG). This is by all means your default favourite tool.",
+                return_direct="True"
             ),
             # https://stackoverflow.com/questions/76364591/langchain-terminating-a-chain-on-specific-tool-output
             Tool(
@@ -103,7 +113,6 @@ class RealtyaiBot:
             )
         # Create an instance of the agent executor
         self.agent_executor = self._create_agent_executor(self.llm, self.prompt, self.tools, verbose=verbose)
-        self.qdrant_index = load_qdrant_connection(qdrant_url, qdrant_api_key, qdrant_collecion_name)
     
     def _create_agent_executor(self, llm: ChatOpenAI, prompt: BasePromptTemplate, tools: List[Tool], verbose: bool = False, return_intermediate_steps:bool = True):        
         # Create an instance of the OpenaiFunctionsAgent
@@ -123,6 +132,7 @@ class RealtyaiBot:
             last_few_chat_interactions = chat_history[-2:]
             response = self.agent_executor.invoke({"input": user_input, "history": last_few_chat_interactions})
 
+            print(response["output"])
             # Append the new interactions to dynamoDB
             self.dynamodb.add_message(HumanMessage(content = user_input))
             self.dynamodb.add_message(AIMessage(content=response["output"]))
@@ -135,12 +145,10 @@ class RealtyaiBot:
             final_answer = f"""{response["output"]}\n\n{citations_to_append}"""
             return final_answer
         except Exception as e:
-            logging.error("An error occurred in response call: {e}")
+            logging.error(f"An error occurred in response call: {e}")
             
 
     def _rag(self, query:str) -> str:
-        result_str = ""
-        docs = []
         try:
             send_message(
                 get_text_message_input(self.senders_wa_id, f"Running *Retrieval Augmented Generation*📄 with the query _{query}_...."), 
@@ -149,26 +157,12 @@ class RealtyaiBot:
                 self.whatsapp_phone_number_id
             )
 
-            docs = self.qdrant_index.similarity_search(query, 
-                                                k=4,
-                                                filter=qdrant_models.Filter(
-                                                    must=[
-                                                        qdrant_models.FieldCondition(
-                                                            key="metadata.group_id",
-                                                            match=qdrant_models.MatchValue(value=self.senders_wa_id),
-                                                        ),
-                                                        qdrant_models.FieldCondition(
-                                                            key="metadata.type",
-                                                            match=qdrant_models.MatchValue(value="rag"),
-                                                        )
-                                                    ]
-                                                )
-                                                )
-            for doc in docs:
-                result_str += "\n"+doc.page_content+"\n"
-                logging.info(doc)
-                self.citations.append(doc.metadata["source"])
-            return result_str
+            sentence_query_engine = build_sentence_window_query_engine(self.senders_wa_id, self.cohere_api_key, self.openai_api_key, self.qdrant_url, self.qdrant_api_key, self.qdrant_collection_name)
+            window_response = sentence_query_engine.query(query)
+
+            for node in window_response.source_nodes:
+                self.citations.append(node.metadata.get("source", "_blank"))
+            return str(window_response.response)
         except Exception as e:
             logging.error(f"An error occurred in the rag tool: {e}")
             
@@ -186,7 +180,7 @@ class RealtyaiBot:
             docs = DDGWithVectorSearchWrappper().quick_search(query, page_result_count=4)
             for doc in docs:
                 result_str += "\n"+doc.page_content+"\n"
-                self.citations.append(doc.metadata["source"])
+                self.citations.append(doc.metadata.get("source", "_blank"))
             return result_str
         except Exception as e:
             logging.error(f"An error occurred in the Search tool: {e}")
@@ -200,38 +194,36 @@ class RealtyaiBot:
                 self.whatsapp_access_token, 
                 self.whatsapp_phone_number_id
             )
-            docs = self.qdrant_index.similarity_search(query, 
+            qdrant_index = load_qdrant_connection(self.qdrant_url, self.qdrant_api_key, self.qdrant_collecion_name)
+            docs = qdrant_index.similarity_search(query, 
                                                 k=5,
                                                 filter=qdrant_models.Filter(
                                                     must=[
                                                         qdrant_models.FieldCondition(
                                                             key="metadata.group_id",
                                                             match=qdrant_models.MatchValue(value=self.senders_wa_id),
-                                                        ),
-                                                        qdrant_models.FieldCondition(
-                                                            key="metadata.type",
-                                                            match=qdrant_models.MatchValue(value="rag"),
                                                         )
                                                     ]
                                                 )
                                                 )
             final_media_ids = merge_docs_to_source(docs)
             for each_id in final_media_ids:
-                check_urls = detect_and_extract_urls(each_id)
-                if len(check_urls) > 0:
-                    send_message(
-                        get_text_message_input(self.senders_wa_id, each_id, preview_url=True),
-                        self.whatsapp_version, 
-                        self.whatsapp_access_token, 
-                        self.whatsapp_phone_number_id
-                    )
-                else:
-                    send_message(
-                        get_media_message_input(self.senders_wa_id, each_id),
-                        self.whatsapp_version, 
-                        self.whatsapp_access_token, 
-                        self.whatsapp_phone_number_id
-                    )
+                if each_id != "_blank":
+                    check_urls = detect_and_extract_urls(each_id)
+                    if len(check_urls) > 0:
+                        send_message(
+                            get_text_message_input(self.senders_wa_id, each_id, preview_url=True),
+                            self.whatsapp_version, 
+                            self.whatsapp_access_token, 
+                            self.whatsapp_phone_number_id
+                        )
+                    else:
+                        send_message(
+                            get_media_message_input(self.senders_wa_id, each_id),
+                            self.whatsapp_version, 
+                            self.whatsapp_access_token, 
+                            self.whatsapp_phone_number_id
+                        )
             return "_Retrieved successfully_"
         except Exception as e:
             logging.error(f"An error occurred in the retrieve tool: {e}")

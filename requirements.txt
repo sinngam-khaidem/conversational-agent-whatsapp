@@ -12,5 +12,7 @@ pypdf==3.17.4
 requests==2.31.0
 openai==1.6.1
 faiss-cpu==1.7.4
-tiktoken==0.5.1
+tiktoken
 fastembed==0.1.3
+llama_index
+cohere
