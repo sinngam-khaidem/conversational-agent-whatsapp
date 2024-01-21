@@ -1,8 +1,6 @@
 import logging
 import json
 
-
-
 def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_key:str, qdrant_collection_name:str):
     import openai
     from llama_index.embeddings import FastEmbedEmbedding
@@ -16,29 +14,32 @@ def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_k
             VectorStoreIndex
     )
 
-    openai.api_key = openai_api_key
-    
-    client = qdrant_client.QdrantClient(
-        url = qdrant_url,
-        api_key = qdrant_api_key
-    )
+    try:
+        openai.api_key = openai_api_key
+        
+        client = qdrant_client.QdrantClient(
+            url = qdrant_url,
+            api_key = qdrant_api_key
+        )
 
-    llm = OpenAI(model = "gpt-3.5-turbo", temperature = 0.1)
-    embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
-    sentence_node_parser = SentenceWindowNodeParser.from_defaults(
-                        window_size = 3,
-                        window_metadata_key = "window",
-                        original_text_metadata_key= "original_text"
+        llm = OpenAI(model = "gpt-3.5-turbo", temperature = 0.1)
+        embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
+        sentence_node_parser = SentenceWindowNodeParser.from_defaults(
+                            window_size = 4,
+                            window_metadata_key = "window",
+                            original_text_metadata_key= "original_text"
+                        )
+        sentence_context = ServiceContext.from_defaults(
+                    llm=llm,
+                    embed_model = embed_model,
+                    node_parser=sentence_node_parser
                     )
-    sentence_context = ServiceContext.from_defaults(
-                llm=llm,
-                embed_model = embed_model,
-                node_parser=sentence_node_parser
-                )
 
-    vector_store = QdrantVectorStore(client=client, collection_name=qdrant_collection_name)
-    sentence_index = VectorStoreIndex.from_vector_store(vector_store=vector_store, service_context=sentence_context)
-    return sentence_index
+        vector_store = QdrantVectorStore(client=client, collection_name=qdrant_collection_name)
+        sentence_index = VectorStoreIndex.from_vector_store(vector_store=vector_store, service_context=sentence_context)
+        return sentence_index
+    except Exception as e:
+        logging.error(f"An error occurred while builing the sentence window index: {e}")
 
 def build_sentence_window_query_engine(senders_wa_id:str, cohere_api_key:str, openai_api_key:str, qdrant_url:str, qdrant_api_key:str, qdrant_collection_name:str, similarity_top_k=6, rerank_top_n=2):
     from llama_index.postprocessor.cohere_rerank import CohereRerank

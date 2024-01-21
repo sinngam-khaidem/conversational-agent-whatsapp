@@ -107,11 +107,14 @@ def agent_call(agent_call_request: AgentCallRequest):
         )
     response = realtyai_bot(agent_call_request.message_body)
     response = process_text_for_whatsapp(response)
-    send_message(
-        get_text_message_input(agent_call_request.senders_wa_id, response),
-        WHATSAPP_VERSION,
-        WHATSAPP_ACCESS_TOKEN,
-        WHATSAPP_PHONE_NUMBER_ID 
-    )
+    try:
+        send_message(
+            get_text_message_input(agent_call_request.senders_wa_id, response),
+            WHATSAPP_VERSION,
+            WHATSAPP_ACCESS_TOKEN,
+            WHATSAPP_PHONE_NUMBER_ID 
+        )
+    except Exception as e:
+        logging.error(f"An error occurred while sending the reply of agent call: {e}")
 
     return {'Agent Response': response}

@@ -17,7 +17,7 @@ from langchain.agents import AgentExecutor, create_openai_functions_agent
 import logging
 import openai
 from langchain.globals import set_debug
-set_debug(False)
+set_debug(True)
 
 from app.services.web_search_service.ddg_search_service import DDGWithVectorSearchWrappper
 from app.services.databases.qdrant_setup import (
@@ -28,7 +28,8 @@ from app.services.databases.qdrant_setup import (
 from app.services.databases.dynamodb_setup import DynamoDBSessionManagement
 from app.services.service_utilities import (
         merge_docs_to_source, 
-        detect_and_extract_urls
+        detect_and_extract_urls,
+        shorten_url
     )
 from app.general_utilities import (
         send_message,
@@ -84,12 +85,12 @@ class RealtyaiBot:
             Tool(
                 name="Search",
                 func=self._search,
-                description="Useful for when you need to answer questions about current events, current state of the world, health, medicine and pop culture. This is your default tool, until told otherwise."
+                description="Useful for when you need to answer questions about current events, current state of the world, health, medicine and pop culture."
             ),
             Tool(
                 name="Rag",
                 func=self._rag,
-                description="Useful when you need to look for answers in documents, pdfs, text files, or webpages user shared in the past, and perform Retrieval Augmented Generation(RAG). This is by all means your default favourite tool.",
+                description="Useful when you need to look for answers in documents, PDFs, text files, or webpages Human shared.",
                 return_direct="True"
             ),
             # https://stackoverflow.com/questions/76364591/langchain-terminating-a-chain-on-specific-tool-output
@@ -129,12 +130,12 @@ class RealtyaiBot:
 
             # Retreive the chat interactions of the user from DynamoDB
             chat_history = self.dynamodb.messages()
-            last_few_chat_interactions = chat_history[-2:]
+            last_few_chat_interactions = chat_history[-3:]
+
             response = self.agent_executor.invoke({"input": user_input, "history": last_few_chat_interactions})
 
-            print(response["output"])
             # Append the new interactions to dynamoDB
-            self.dynamodb.add_message(HumanMessage(content = user_input))
+            self.dynamodb.add_message(HumanMessage(content=user_input))
             self.dynamodb.add_message(AIMessage(content=response["output"]))
 
             for item in self.citations:
@@ -143,6 +144,7 @@ class RealtyaiBot:
                 citations_to_append += f"{i+1}. {item}\n"
 
             final_answer = f"""{response["output"]}\n\n{citations_to_append}"""
+            print(final_answer)
             return final_answer
         except Exception as e:
             logging.error(f"An error occurred in response call: {e}")
@@ -156,34 +158,46 @@ class RealtyaiBot:
                 self.whatsapp_access_token, 
                 self.whatsapp_phone_number_id
             )
+        except Exception as e:
+            logging.error(f"An error occurred while sending status update message of rag tool: {e}")
 
+        try:
             sentence_query_engine = build_sentence_window_query_engine(self.senders_wa_id, self.cohere_api_key, self.openai_api_key, self.qdrant_url, self.qdrant_api_key, self.qdrant_collection_name)
             window_response = sentence_query_engine.query(query)
 
             for node in window_response.source_nodes:
-                self.citations.append(node.metadata.get("source", "_blank"))
+                if len(self.citations) < 2:
+                    self.citations.append(node.metadata.get("source", "_blank"))
             return str(window_response.response)
         except Exception as e:
             logging.error(f"An error occurred in the rag tool: {e}")
+            return "_Failed the Rag._"
             
 
     def _search(self, query:str) -> str:
-        send_message(
-            get_text_message_input(self.senders_wa_id, f"Running *Search*🌐 with the query _{query}_.... "),
-            self.whatsapp_version, 
-            self.whatsapp_access_token, 
-            self.whatsapp_phone_number_id
-        )
+        try:
+            send_message(
+                get_text_message_input(self.senders_wa_id, f"Running *Search*🌐 with the query _{query}_.... "),
+                self.whatsapp_version, 
+                self.whatsapp_access_token, 
+                self.whatsapp_phone_number_id
+            )
+        except Exception as e:
+            logging.error(f"An error occurred while sending status update message of search tool: {e}")
 
         try:
             result_str = ""
             docs = DDGWithVectorSearchWrappper().quick_search(query, page_result_count=4)
             for doc in docs:
                 result_str += "\n"+doc.page_content+"\n"
-                self.citations.append(doc.metadata.get("source", "_blank"))
+                if len(self.citations) < 2:
+                    self.citations.append(shorten_url(doc.metadata.get("source", "")))
+
+            self.dynamodb.add_message(SystemMessage(content=result_str))
             return result_str
         except Exception as e:
             logging.error(f"An error occurred in the Search tool: {e}")
+            return "_Failed the search._"
     
     def _retrieve(self, query: str):
         docs = []
@@ -194,6 +208,9 @@ class RealtyaiBot:
                 self.whatsapp_access_token, 
                 self.whatsapp_phone_number_id
             )
+        except Exception as e:
+            logging.error(f"An error occurred whike sending status update message of retrieve tool: {e}")
+        try:
             qdrant_index = load_qdrant_connection(self.qdrant_url, self.qdrant_api_key, self.qdrant_collecion_name)
             docs = qdrant_index.similarity_search(query, 
                                                 k=5,
@@ -211,22 +228,29 @@ class RealtyaiBot:
                 if each_id != "_blank":
                     check_urls = detect_and_extract_urls(each_id)
                     if len(check_urls) > 0:
-                        send_message(
-                            get_text_message_input(self.senders_wa_id, each_id, preview_url=True),
-                            self.whatsapp_version, 
-                            self.whatsapp_access_token, 
-                            self.whatsapp_phone_number_id
-                        )
+                        try:
+                            send_message(
+                                get_text_message_input(self.senders_wa_id, each_id, preview_url=True),
+                                self.whatsapp_version, 
+                                self.whatsapp_access_token, 
+                                self.whatsapp_phone_number_id
+                            )
+                        except Exception as e:
+                            logging.error("An error occurred while sending the url: {e}")
                     else:
-                        send_message(
-                            get_media_message_input(self.senders_wa_id, each_id),
-                            self.whatsapp_version, 
-                            self.whatsapp_access_token, 
-                            self.whatsapp_phone_number_id
-                        )
+                        try:
+                            send_message(
+                                get_media_message_input(self.senders_wa_id, each_id),
+                                self.whatsapp_version, 
+                                self.whatsapp_access_token, 
+                                self.whatsapp_phone_number_id
+                            )
+                        except Exception as e:
+                            logging.error("An error occurred while sending the media file: {e}")                        
             return "_Retrieved successfully_"
         except Exception as e:
             logging.error(f"An error occurred in the retrieve tool: {e}")
+            return "_Failed the retrieval_"
 
             
 

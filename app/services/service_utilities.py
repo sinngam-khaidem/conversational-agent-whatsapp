@@ -5,6 +5,8 @@ from typing import List, Dict
 from urlextract import URLExtract
 from datetime import datetime
 import pytz
+import pyshorteners
+import logging
 
 # Function to split texts by token
 def tiktoken_len(text):
@@ -66,7 +68,14 @@ def merge_docs_to_source(docs: List[Document]) -> List[str]:
 
     return max_frequency_keys
 
-
+def shorten_url(long_url:str):
+    try:
+        type_tiny = pyshorteners.Shortener()
+        short_url = type_tiny.tinyurl.short(long_url)
+        return short_url
+    except Exception as e:
+        return long_url
+    
 
 
 if __name__ == "__main__":
