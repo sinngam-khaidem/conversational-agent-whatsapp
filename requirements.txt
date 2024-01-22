@@ -16,3 +16,4 @@ tiktoken
 fastembed==0.1.3
 llama_index
 cohere
+httpx
