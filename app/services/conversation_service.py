@@ -16,6 +16,8 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 import logging
 import openai
+
+from qdrant_client.http import models as qdrant_models
 from langchain.globals import set_debug
 set_debug(True)
 
@@ -31,7 +33,7 @@ from app.services.service_utilities import (
         detect_and_extract_urls,
         shorten_url
     )
-from app.general_utilities import (
+from app.services.general_utilities import (
         send_message,
         get_text_message_input,
         get_media_message_input
@@ -55,7 +57,7 @@ class RealtyaiBot:
         system_message: str = ("You are an AI personal assistant, specialised in all things retrieval and search."
             "Do your best to answer the questions at the end. Feel free to use any tools available to look up relevant information," 
             "only if necessary. Ask follow-up questions in case of vague or unclear questions, to get more information about what is being asked."
-            "Keep your answers short and precise. If you do not know the answer, simply say so. DO NOT MAKE UP ANSWWERS."),
+            "Keep your answers very very short and extremely precise. If you do not know the answer, simply say so. DO NOT MAKE UP ANSWERS."),
         verbose: bool = True,
     ):  
         self.openai_api_key = openai_api_key
@@ -103,7 +105,7 @@ class RealtyaiBot:
 
         ]
 
-        self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key,max_tokens=256, temperature=0.1)
+        self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key,max_tokens=128, temperature=0.1)
 
         # Create an instance of the DynamoDBSessionManagement to handle chat history, number of interaction etc.abs
         self.dynamodb = DynamoDBSessionManagement(
@@ -119,7 +121,7 @@ class RealtyaiBot:
         # Create an instance of the OpenaiFunctionsAgent
         agent = create_openai_functions_agent(llm=llm, tools=tools, prompt=prompt)
         # Create an instance of the runtime of the agent
-        return AgentExecutor(agent=agent, tools=tools, verbose=verbose, remember_intermediate_steps=False)
+        return AgentExecutor(agent=agent, tools=tools, verbose=verbose, remember_intermediate_steps=False, max_iterations=3)
 
     # This is the main function that will generate the response of the conversation agent
     def __call__(self, user_input:str)-> str:
@@ -130,7 +132,7 @@ class RealtyaiBot:
 
             # Retreive the chat interactions of the user from DynamoDB
             chat_history = self.dynamodb.messages()
-            last_few_chat_interactions = chat_history[-3:]
+            last_few_chat_interactions = chat_history[-2:]
 
             response = self.agent_executor.invoke({"input": user_input, "history": last_few_chat_interactions})
 
@@ -144,7 +146,7 @@ class RealtyaiBot:
                 citations_to_append += f"{i+1}. {item}\n"
 
             final_answer = f"""{response["output"]}\n\n{citations_to_append}"""
-            print(final_answer)
+            # print(final_answer)
             return final_answer
         except Exception as e:
             logging.error(f"An error occurred in response call: {e}")
@@ -153,7 +155,7 @@ class RealtyaiBot:
     def _rag(self, query:str) -> str:
         try:
             send_message(
-                get_text_message_input(self.senders_wa_id, f"Running *Retrieval Augmented Generation*📄 with the query _{query}_...."), 
+                get_text_message_input(self.senders_wa_id, f"_Retrieval Augmented Generation_ about *{query}*...."), 
                 self.whatsapp_version, 
                 self.whatsapp_access_token, 
                 self.whatsapp_phone_number_id
@@ -177,7 +179,7 @@ class RealtyaiBot:
     def _search(self, query:str) -> str:
         try:
             send_message(
-                get_text_message_input(self.senders_wa_id, f"Running *Search*🌐 with the query _{query}_.... "),
+                get_text_message_input(self.senders_wa_id, f"_Searching about_ *{query}*...."),
                 self.whatsapp_version, 
                 self.whatsapp_access_token, 
                 self.whatsapp_phone_number_id
@@ -190,10 +192,8 @@ class RealtyaiBot:
             docs = DDGWithVectorSearchWrappper().quick_search(query, page_result_count=4)
             for doc in docs:
                 result_str += "\n"+doc.page_content+"\n"
-                if len(self.citations) < 2:
-                    self.citations.append(shorten_url(doc.metadata.get("source", "")))
-
-            self.dynamodb.add_message(SystemMessage(content=result_str))
+                # if len(self.citations) < 2:
+                #     self.citations.append(shorten_url(doc.metadata.get("source", "")))
             return result_str
         except Exception as e:
             logging.error(f"An error occurred in the Search tool: {e}")
@@ -203,7 +203,7 @@ class RealtyaiBot:
         docs = []
         try:
             send_message(
-                get_text_message_input(self.senders_wa_id, f"Running *Retrieve* with the query _{query}_...."), 
+                get_text_message_input(self.senders_wa_id, f"_Retrieving resources about_ *{query}*...."), 
                 self.whatsapp_version, 
                 self.whatsapp_access_token, 
                 self.whatsapp_phone_number_id
@@ -211,7 +211,7 @@ class RealtyaiBot:
         except Exception as e:
             logging.error(f"An error occurred whike sending status update message of retrieve tool: {e}")
         try:
-            qdrant_index = load_qdrant_connection(self.qdrant_url, self.qdrant_api_key, self.qdrant_collecion_name)
+            qdrant_index = load_qdrant_connection(self.qdrant_url, self.qdrant_api_key, self.qdrant_collection_name)
             docs = qdrant_index.similarity_search(query, 
                                                 k=5,
                                                 filter=qdrant_models.Filter(
