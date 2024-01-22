@@ -31,7 +31,7 @@ def process_pdf_document(file_path: str, wa_id:str, media_id:str, caption: str, 
         sentence_index.insert(document=document)
         logging.info("Document successfully inserted to the index")
     except Exception as e:
-        logging.error(f"An error occurred while indexing the doument: {e}")
+        logging.error(f"An error occurred while indexing the document: {e}")
 
 
 
