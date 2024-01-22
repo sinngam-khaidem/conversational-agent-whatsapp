@@ -40,21 +40,21 @@ COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 def post_embedd_pdf(embed_pdf_request):
     """Embeds the pdf document to the vector database"""
-    logging.info("Embedding PDF document.")
-    temp_files_dir = "/app/temp_files_dir"
-    s3_object_key = f"user_resources/{embed_pdf_request.senders_wa_id}/{embed_pdf_request.media_id}.pdf"
+    temp_files_dir = "./app/temp_files_dir"
+    s3_object_key = f"user_resources/{embed_pdf_request['senders_wa_id']}/{embed_pdf_request['media_id']}.pdf"
 
-    print("Saved in aws bucket")
-    if os.path.exists(temp_files_dir):
+    if not os.path.exists(temp_files_dir):
         raise ValueError("Please provide a temporary folder to save the files.")
 
-    path_to_file = f'{temp_files_dir}/{embed_pdf_request.media_id}.pdf'
+    path_to_file = f'{temp_files_dir}/{embed_pdf_request["media_id"]}.pdf'
 
     try:
         with open(path_to_file, 'wb') as file:
-            file.write(get_media_file_content_from_whatsapp(embed_pdf_request.media_id, WHATSAPP_VERSION, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID))
-        process_pdf_document(path_to_file, embed_pdf_request.senders_wa_id, embed_pdf_request.media_id, embed_pdf_request.caption, embed_pdf_request.filename, QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
+            file.write(get_media_file_content_from_whatsapp(embed_pdf_request["media_id"], WHATSAPP_VERSION, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID))
+
+        process_pdf_document(path_to_file, embed_pdf_request["senders_wa_id"], embed_pdf_request["media_id"], embed_pdf_request["caption"], embed_pdf_request["filename"], QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
         write_file_to_s3(path_to_file, AWS_BUCKET_NAME, s3_object_key, AWS_ACCESS_KEY, AWS_SECRET_KEY)
+        
     except Exception as e:
         logging.error(f"An error occurred while embedding pdf: {e}")
     finally:

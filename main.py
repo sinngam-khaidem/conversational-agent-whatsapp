@@ -12,7 +12,9 @@ from app.tasks import (
 )
 from app.services.general_utilities import (
     mark_msg_as_read,
-    is_valid_whatsapp_message
+    is_valid_whatsapp_message,
+    send_message,
+    get_text_message_input
 )
 import asyncio
 
@@ -68,16 +70,14 @@ async def handle_message(request: Request):
             name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
             wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
             message = body["entry"][0]["changes"][0]["value"]["messages"][0]
+            message_type = message["type"]
 
             if msg_id in seen:
                 return JSONResponse(content = {'body': "message already seen"}, status_code=200)
             seen.add(msg_id)
 
-            # Obtain the reference to the current event loop
-            loop = asyncio.get_event_loop()
-
             # Schedule the asynchronous function to run in the background
-            task = loop.create_task(mark_msg_as_read(
+            mark_read_task = asyncio.create_task(mark_msg_as_read(
                                         msg_id,
                                         WHATSAPP_VERSION,
                                         WHATSAPP_PHONE_NUMBER_ID,
@@ -85,9 +85,6 @@ async def handle_message(request: Request):
                                     )
                     )
             
-
-            message_type = message["type"]
-
             if message_type == "text":
                 message_body = message["text"]["body"]
                 agent_call_body = {
@@ -97,10 +94,19 @@ async def handle_message(request: Request):
                 agent_call_response = agent_call(agent_call_request=agent_call_body)
                 return JSONResponse(content = {'answer': agent_call_response})
                 
-            elif message_type == "documents" or message_type == "image":
-                mime_type = message[message_type][mime_type]
+            elif message_type == "document" or message_type == "image":
+                mime_type = message[message_type]["mime_type"]
                 if mime_type in ["application/pdf", "image/jpeg", "image/png"]:
                     if mime_type == "application/pdf":
+                        send_message(
+                            get_text_message_input(
+                                wa_id, 
+                                f"*Processing your media*📄⚙️🛠️. This involves uploading the document to a proper storage, and vector indexing the said document, allowing you to perform *RAG* on it...."
+                            ),
+                            WHATSAPP_VERSION,
+                            WHATSAPP_ACCESS_TOKEN,
+                            WHATSAPP_PHONE_NUMBER_ID
+                        )
                         pdf_file_request_body = {
                             "filename": message[message_type].get("filename", "Unamed"),
                             "media_id": message[message_type]["id"],
@@ -110,7 +116,16 @@ async def handle_message(request: Request):
                             "mime_type": mime_type
                         }
                         post_embedd_pdf(embed_pdf_request=pdf_file_request_body)
-                        return JSONResponse(content = {'body': 'Successfully processed your media'}, status_code = 200)
+                        send_message(
+                            get_text_message_input(
+                                wa_id, 
+                                f"*_Media successfully processed._"
+                            ),
+                            WHATSAPP_VERSION,
+                            WHATSAPP_ACCESS_TOKEN,
+                            WHATSAPP_PHONE_NUMBER_ID
+                        )
+                        return JSONResponse(content = {'body': 'Successfully indexed your media.'}, status_code = 200)
                     else:
                         return JSONResponse(content= {'body': 'Invalid mime type'}, status_code = 200)
     except Exception as e:

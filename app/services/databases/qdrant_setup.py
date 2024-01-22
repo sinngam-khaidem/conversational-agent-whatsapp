@@ -19,7 +19,8 @@ def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_k
         
         client = qdrant_client.QdrantClient(
             url = qdrant_url,
-            api_key = qdrant_api_key
+            api_key = qdrant_api_key,
+            timeout=60
         )
 
         llm = OpenAI(model = "gpt-3.5-turbo", temperature = 0.1)
