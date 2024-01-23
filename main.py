@@ -30,8 +30,8 @@ WHATSAPP_PHONE_NUMBER_ID = os.getenv('WHATSAPP_PHONE_NUMBER_ID')
 
 myapp = FastAPI()
 
-# Creating a cache with a TTL of 120 seconds
-cache = TTLCache(maxsize=100, ttl=120)
+# Creating a cache with a TTL of 300 seconds
+cache = TTLCache(maxsize=1000, ttl=300)
 
 
 # Required webhook verifictaion for WhatsApp
@@ -78,8 +78,8 @@ async def handle_message(request: Request):
             message_type = message["type"]
             timestamp = message["timestamp"]
 
-            # I msg_id is 
-            if cache.get(msg_id) is not None or int(timestamp) < int(time.time()) - 120:
+            # If msg id is in cache or notification is older than 5 mins, we won't entertain that status change update.
+            if cache.get(msg_id) is not None or int(timestamp) < int(time.time()) - 300:
                 return JSONResponse(content = {'body': "message already seen"}, status_code=200)
             else:
                 cache[msg_id] = True
