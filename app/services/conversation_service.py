@@ -3,14 +3,16 @@ from langchain.tools.base import BaseTool, Tool
 from langchain_core.messages import (
         SystemMessage, 
         HumanMessage, 
-        AIMessage, 
+        AIMessage,
+        ToolMessage, 
         get_buffer_string
     )
 from langchain_core.prompts.chat import (
         MessagesPlaceholder, 
         ChatPromptTemplate, 
         HumanMessagePromptTemplate, 
-        BasePromptTemplate
+        BasePromptTemplate,
+
     )
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_functions_agent
@@ -42,6 +44,7 @@ from app.services.general_utilities import (
 class RealtyaiBot:
     def __init__(
         self,
+        max_token_length: int = 1000,
         senders_wa_id: str = None,
         openai_api_key: str = None,
         cohere_api_key:str = None,
@@ -68,6 +71,7 @@ class RealtyaiBot:
         self.whatsapp_version = whatsapp_version
         self.whatsapp_access_token = whatsapp_access_token
         self.whatsapp_phone_number_id = whatsapp_phone_number_id
+        self.max_token_length = max_token_length
         # Define 2 important state variables
         self.senders_wa_id = senders_wa_id
         self.citations = []
@@ -132,9 +136,10 @@ class RealtyaiBot:
 
             # Retreive the chat interactions of the user from DynamoDB
             chat_history = self.dynamodb.messages()
-            last_few_chat_interactions = chat_history[-2:]
+            last_few_chat_interactions = chat_history[-6:]
+            pruned_messages = self._prune_long_messages(last_few_chat_interactions)
 
-            response = self.agent_executor.invoke({"input": user_input, "history": last_few_chat_interactions})
+            response = self.agent_executor.invoke({"input": user_input, "history": pruned_messages})
 
             # Append the new interactions to dynamoDB
             self.dynamodb.add_message(HumanMessage(content=user_input))
@@ -194,6 +199,7 @@ class RealtyaiBot:
                 result_str += "\n"+doc.page_content+"\n"
                 # if len(self.citations) < 2:
                 #     self.citations.append(shorten_url(doc.metadata.get("source", "")))
+            self.dynamodb.add_message(SystemMessage(content=f"These contexts might help you:\n\n{result_str}"))
             return result_str
         except Exception as e:
             logging.error(f"An error occurred in the Search tool: {e}")
@@ -251,6 +257,13 @@ class RealtyaiBot:
         except Exception as e:
             logging.error(f"An error occurred in the retrieve tool: {e}")
             return "_Failed the retrieval_"
+    def _prune_long_messages(self, messages):
+        curr_buffer_length = self.llm.get_num_tokens_from_messages(messages)
+        if curr_buffer_length > self.max_token_length:
+            while curr_buffer_length > self.max_token_length:
+                messages.pop(0)
+                curr_buffer_length = self.llm.get_num_tokens_from_messages(messages)
+        return messages
 
             
 

@@ -19,6 +19,8 @@ from app.services.general_utilities import (
 from app.services.pdf_handling import process_pdf_document
 from app.services.url_handling import process_url_document
 from app.services.conversation_service import RealtyaiBot
+from app.services.databases.dynamodb_setup import DynamoDBSessionManagement
+from langchain_core.messages import ToolMessage
 import logging
 import os
 from dotenv import load_dotenv
@@ -52,9 +54,19 @@ def post_embedd_pdf(embed_pdf_request):
         with open(path_to_file, 'wb') as file:
             file.write(get_media_file_content_from_whatsapp(embed_pdf_request["media_id"], WHATSAPP_VERSION, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID))
 
-        process_pdf_document(path_to_file, embed_pdf_request["senders_wa_id"], embed_pdf_request["media_id"], embed_pdf_request["caption"], embed_pdf_request["filename"], QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
+        summary = process_pdf_document(path_to_file, embed_pdf_request["senders_wa_id"], embed_pdf_request["media_id"], embed_pdf_request["caption"], embed_pdf_request["filename"], QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
+        DynamoDBSessionManagement(DYNAMODB_TABLE_NAME, embed_pdf_request["senders_wa_id"], AWS_ACCESS_KEY, AWS_SECRET_KEY).add_message(ToolMessage(content = f"These context might help you:\n\n{summary}"))
+        try:
+            send_bot_response = send_message(
+                get_text_message_input(embed_pdf_request["senders_wa_id"], summary + "\n\n_Use the_ *Rag* _keyword to ask these questions._"),
+                WHATSAPP_VERSION,
+                WHATSAPP_ACCESS_TOKEN,
+                WHATSAPP_PHONE_NUMBER_ID 
+            )
+            assert send_bot_response.status_code == 200
+        except Exception as e:
+            logging.error(f"An error occurred while sending the summary: {e}")
         write_file_to_s3(path_to_file, AWS_BUCKET_NAME, s3_object_key, AWS_ACCESS_KEY, AWS_SECRET_KEY)
-        
     except Exception as e:
         logging.error(f"An error occurred while embedding pdf: {e}")
     finally:
@@ -76,7 +88,8 @@ def agent_call(agent_call_request):
     """Requests action from the agent"""
 
     realtyai_bot = RealtyaiBot(
-            agent_call_request["senders_wa_id"], 
+            1000,
+            agent_call_request["senders_wa_id"],
             OPENAI_API_KEY,
             COHERE_API_KEY, 
             AWS_ACCESS_KEY, 
