@@ -23,7 +23,7 @@ def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_k
             timeout=60
         )
 
-        llm = OpenAI(model = "gpt-3.5-turbo", temperature = 0.1)
+        llm = OpenAI(model = "gpt-3.5-turbo", temperature = 0.1, max_tokens=128)
         embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
         sentence_node_parser = SentenceWindowNodeParser.from_defaults(
                             window_size = 4,
@@ -37,7 +37,7 @@ def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_k
                     )
 
         vector_store = QdrantVectorStore(client=client, collection_name=qdrant_collection_name)
-        sentence_index = VectorStoreIndex.from_vector_store(vector_store=vector_store, service_context=sentence_context)
+        sentence_index = VectorStoreIndex.from_vector_store(vector_store=vector_store, service_context=sentence_context, use_async=True, show_progress=True)
         return sentence_index
     except Exception as e:
         logging.error(f"An error occurred while builing the sentence window index: {e}")

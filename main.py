@@ -1,4 +1,6 @@
 import logging
+from cachetools import TTLCache
+import functools
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 import requests
@@ -17,6 +19,7 @@ from app.services.general_utilities import (
     get_text_message_input
 )
 import asyncio
+import time
 
 load_dotenv()
 
@@ -26,7 +29,9 @@ WHATSAPP_VERSION = os.getenv('WHATSAPP_VERSION')
 WHATSAPP_PHONE_NUMBER_ID = os.getenv('WHATSAPP_PHONE_NUMBER_ID')
 
 myapp = FastAPI()
-seen = set()
+
+# Creating a cache with a TTL of 120 seconds
+cache = TTLCache(maxsize=100, ttl=120)
 
 
 # Required webhook verifictaion for WhatsApp
@@ -71,10 +76,14 @@ async def handle_message(request: Request):
             wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
             message = body["entry"][0]["changes"][0]["value"]["messages"][0]
             message_type = message["type"]
+            timestamp = message["timestamp"]
 
-            if msg_id in seen:
+            # I msg_id is 
+            if cache.get(msg_id) is not None or int(timestamp) < int(time.time()) - 120:
                 return JSONResponse(content = {'body': "message already seen"}, status_code=200)
-            seen.add(msg_id)
+            else:
+                cache[msg_id] = True
+            print(cache)
 
             # Schedule the asynchronous function to run in the background
             mark_read_task = asyncio.create_task(mark_msg_as_read(
@@ -101,7 +110,7 @@ async def handle_message(request: Request):
                         send_message(
                             get_text_message_input(
                                 wa_id, 
-                                f"*Processing your media*📄⚙️🛠️. This involves uploading the document to a proper storage, and vector indexing the said document, allowing you to perform *RAG* on it...."
+                                f"_Processing your media_..."
                             ),
                             WHATSAPP_VERSION,
                             WHATSAPP_ACCESS_TOKEN,
@@ -116,15 +125,15 @@ async def handle_message(request: Request):
                             "mime_type": mime_type
                         }
                         post_embedd_pdf(embed_pdf_request=pdf_file_request_body)
-                        send_message(
-                            get_text_message_input(
-                                wa_id, 
-                                f"*_Media successfully processed._"
-                            ),
-                            WHATSAPP_VERSION,
-                            WHATSAPP_ACCESS_TOKEN,
-                            WHATSAPP_PHONE_NUMBER_ID
-                        )
+                        # send_message(
+                        #     get_text_message_input(
+                        #         wa_id, 
+                        #         f"_Media successfully processed._"
+                        #     ),
+                        #     WHATSAPP_VERSION,
+                        #     WHATSAPP_ACCESS_TOKEN,
+                        #     WHATSAPP_PHONE_NUMBER_ID
+                        # )
                         return JSONResponse(content = {'body': 'Successfully indexed your media.'}, status_code = 200)
                     else:
                         return JSONResponse(content= {'body': 'Invalid mime type'}, status_code = 200)
