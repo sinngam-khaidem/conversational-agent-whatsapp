@@ -20,7 +20,7 @@ from app.services.pdf_handling import process_pdf_document
 from app.services.url_handling import process_url_document
 from app.services.conversation_service import RealtyaiBot
 from app.services.databases.dynamodb_setup import DynamoDBSessionManagement
-from langchain_core.messages import ToolMessage
+from langchain_core.messages import SystemMessage
 import logging
 import os
 from dotenv import load_dotenv
@@ -55,7 +55,7 @@ def post_embedd_pdf(embed_pdf_request):
             file.write(get_media_file_content_from_whatsapp(embed_pdf_request["media_id"], WHATSAPP_VERSION, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID))
 
         summary = process_pdf_document(path_to_file, embed_pdf_request["senders_wa_id"], embed_pdf_request["media_id"], embed_pdf_request["caption"], embed_pdf_request["filename"], QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
-        DynamoDBSessionManagement(DYNAMODB_TABLE_NAME, embed_pdf_request["senders_wa_id"], AWS_ACCESS_KEY, AWS_SECRET_KEY).add_message(ToolMessage(content = f"These context might help you:\n\n{summary}"))
+        DynamoDBSessionManagement(DYNAMODB_TABLE_NAME, embed_pdf_request["senders_wa_id"], AWS_ACCESS_KEY, AWS_SECRET_KEY).add_message(SystemMesssage(content = f"These context might help you:\n\n{summary}"))
         try:
             send_bot_response = send_message(
                 get_text_message_input(embed_pdf_request["senders_wa_id"], summary + "\n\n_Use the_ *Rag* _keyword to ask these questions._"),

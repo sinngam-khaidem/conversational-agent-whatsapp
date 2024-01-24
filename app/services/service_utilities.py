@@ -61,7 +61,7 @@ def merge_docs_to_source(docs: List[Document]) -> List[str]:
             source_dict[doc_source] += 1
         else:
             source_dict[doc_source] = 1
-
+    
     max_frequency = max(source_dict.values())
 
     max_frequency_keys = [key for key, value in source_dict.items() if value == max_frequency]

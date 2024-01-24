@@ -229,6 +229,7 @@ class RealtyaiBot:
                                                     ]
                                                 )
                                                 )
+            print(docs)
             final_media_ids = merge_docs_to_source(docs)
             for each_id in final_media_ids:
                 if each_id != "_blank":
