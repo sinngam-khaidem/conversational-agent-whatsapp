@@ -170,7 +170,14 @@ class RealtyaiBot:
             logging.error(f"An error occurred while sending status update message of rag tool: {e}")
 
         try:
-            sentence_query_engine = build_sentence_window_query_engine(self.senders_wa_id, self.cohere_api_key, self.openai_api_key, self.qdrant_url, self.qdrant_api_key, self.qdrant_collection_name)
+            sentence_query_engine = build_sentence_window_query_engine(
+                self.senders_wa_id, 
+                self.cohere_api_key, 
+                self.openai_api_key, 
+                self.qdrant_url, 
+                self.qdrant_api_key, 
+                self.qdrant_collection_name
+            )
             window_response = sentence_query_engine.query(query)
 
             for node in window_response.source_nodes:
@@ -218,33 +225,45 @@ class RealtyaiBot:
         except Exception as e:
             logging.error(f"An error occurred whike sending status update message of retrieve tool: {e}")
         try:
-            node_retriever = build_index_retriever(self.senders_wa_id, self.openai_api_key, self.qdrant_url, self.qdrant_api_key, self.qdrant_collection_name, 3)
+            node_retriever = build_index_retriever(
+                self.senders_wa_id,
+                self.cohere_api_key, 
+                self.openai_api_key, 
+                self.qdrant_url, 
+                self.qdrant_api_key, 
+                self.qdrant_collection_name
+            )
             nodes = node_retriever.retrieve(str_or_query_bundle=query)
+            print(nodes)
             final_media_ids = merge_nodes_to_source(nodes)
-            for each_id in final_media_ids:
-                if each_id != "_blank":
-                    check_urls = detect_and_extract_urls(each_id)
-                    if len(check_urls) > 0:
-                        try:
-                            send_message(
-                                get_text_message_input(self.senders_wa_id, each_id, preview_url=True),
-                                self.whatsapp_version, 
-                                self.whatsapp_access_token, 
-                                self.whatsapp_phone_number_id
-                            )
-                        except Exception as e:
-                            logging.error("An error occurred while sending the url: {e}")
-                    else:
-                        try:
-                            send_message(
-                                get_media_message_input(self.senders_wa_id, each_id),
-                                self.whatsapp_version, 
-                                self.whatsapp_access_token, 
-                                self.whatsapp_phone_number_id
-                            )
-                        except Exception as e:
-                            logging.error("An error occurred while sending the media file: {e}")                        
-            return "_Retrieved successfully_"
+            print(final_media_ids)
+            if len(final_media_ids)>0:
+                for each_id in final_media_ids:
+                    if each_id != "_blank":
+                        check_urls = detect_and_extract_urls(each_id)
+                        if len(check_urls) > 0:
+                            try:
+                                send_message(
+                                    get_text_message_input(self.senders_wa_id, each_id, preview_url=True),
+                                    self.whatsapp_version, 
+                                    self.whatsapp_access_token, 
+                                    self.whatsapp_phone_number_id
+                                )
+                            except Exception as e:
+                                logging.error("An error occurred while sending the url: {e}")
+                        else:
+                            try:
+                                send_message(
+                                    get_media_message_input(self.senders_wa_id, each_id),
+                                    self.whatsapp_version, 
+                                    self.whatsapp_access_token, 
+                                    self.whatsapp_phone_number_id
+                                )
+                            except Exception as e:
+                                logging.error("An error occurred while sending the media file: {e}")                        
+                return "_Retrieved successfully_"
+            else:
+                return "_No relevant resources found._"
         except Exception as e:
             logging.error(f"An error occurred in the retrieve tool: {e}")
             return "_Failed the retrieval_"

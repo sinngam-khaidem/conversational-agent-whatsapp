@@ -77,7 +77,38 @@ def shorten_url(long_url:str):
         return short_url
     except Exception as e:
         return long_url
-    
+
+def generate_summary(text:str, openai_api_key:str):
+    from langchain.chains.summarize import load_summarize_chain
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    from langchain_openai import ChatOpenAI
+    from langchain.prompts import PromptTemplate
+    llm = ChatOpenAI(temperature=0, openai_api_key =openai_api_key)
+    from typing_extensions import Concatenate
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000, chunk_overlap = 20)
+    chunks = text_splitter.create_documents([text])
+    chunk_prompt=""""
+    The following is a set of documents
+    {text}
+    Based on this list of docs, please identify the main themes 
+    Helpful Answer:
+    """
+    map_prompt_template = PromptTemplate(input_variables=['text'], template=chunk_prompt)
+    final_combine_prompt = """The following is set of summaries:
+    {text}
+    Take these and distill it into a very short, final, consolidated summary of the main themes.
+    Append 3 example questions(without answers) from the consolidated summary. 
+    Helpful Answer:"""
+    final_combine_prompt_template=PromptTemplate(input_variables=['text'], template=final_combine_prompt)
+    summary_chain = load_summarize_chain(
+        llm=llm,
+        chain_type='map_reduce',
+        map_prompt=map_prompt_template,
+        combine_prompt=final_combine_prompt_template,
+        verbose = True
+    )
+    return summary_chain.run(chunks)
 
 
 if __name__ == "__main__":

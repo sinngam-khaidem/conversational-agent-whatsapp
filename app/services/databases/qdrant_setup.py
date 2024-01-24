@@ -42,7 +42,16 @@ def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_k
     except Exception as e:
         logging.error(f"An error occurred while builing the sentence window index: {e}")
 
-def build_sentence_window_query_engine(senders_wa_id:str, cohere_api_key:str, openai_api_key:str, qdrant_url:str, qdrant_api_key:str, qdrant_collection_name:str, similarity_top_k=6, rerank_top_n=2):
+def build_sentence_window_query_engine(
+        senders_wa_id:str, 
+        cohere_api_key:str, 
+        openai_api_key:str, 
+        qdrant_url:str, 
+        qdrant_api_key:str, 
+        qdrant_collection_name:str, 
+        similarity_top_k=6, 
+        rerank_top_n=2
+    ):
     from llama_index.postprocessor.cohere_rerank import CohereRerank
     from llama_index.indices.postprocessor import MetadataReplacementPostProcessor
     from llama_index.vector_stores.types import MetadataFilters, ExactMatchFilter
@@ -66,10 +75,25 @@ def build_sentence_window_query_engine(senders_wa_id:str, cohere_api_key:str, op
                             )
     return sentence_window_engine
 
-def build_index_retriever(senders_wa_id:str,openai_api_key:str, qdrant_url:str, qdrant_api_key:str, qdrant_collection_name:str, similarity_top_k=12):
+def build_index_retriever(
+        senders_wa_id:str, 
+        cohere_api_key:str,
+        openai_api_key:str, 
+        qdrant_url:str, 
+        qdrant_api_key:str, 
+        qdrant_collection_name:str, 
+        similarity_top_k=6, 
+        rerank_top_n=3
+    ):
     from llama_index.vector_stores.types import MetadataFilters, ExactMatchFilter
     from app.services.databases.qdrant_setup import build_sentence_window_index
+    from llama_index.indices.postprocessor import MetadataReplacementPostProcessor
+    from llama_index.postprocessor.cohere_rerank import CohereRerank
+    postproc = MetadataReplacementPostProcessor(
+        target_metadata_key="window"
+    )
     index = build_sentence_window_index(openai_api_key, qdrant_url, qdrant_api_key, qdrant_collection_name)
+    cohere_rerank = CohereRerank(api_key=cohere_api_key, top_n=rerank_top_n)
     node_retriever = index.as_retriever(
                                 filters=MetadataFilters(
                                     filters=[
@@ -79,7 +103,8 @@ def build_index_retriever(senders_wa_id:str,openai_api_key:str, qdrant_url:str, 
                                         )
                                     ]
                                 ),
-                                similarity_top_k=similarity_top_k
+                                similarity_top_k=similarity_top_k,
+                                node_postprocessors=[postproc, cohere_rerank]
                             )
     return node_retriever
 

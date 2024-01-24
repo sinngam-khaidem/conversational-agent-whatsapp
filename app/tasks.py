@@ -54,8 +54,22 @@ def post_embedd_pdf(embed_pdf_request):
         with open(path_to_file, 'wb') as file:
             file.write(get_media_file_content_from_whatsapp(embed_pdf_request["media_id"], WHATSAPP_VERSION, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID))
 
-        summary = process_pdf_document(path_to_file, embed_pdf_request["senders_wa_id"], embed_pdf_request["media_id"], embed_pdf_request["caption"], embed_pdf_request["filename"], QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
-        DynamoDBSessionManagement(DYNAMODB_TABLE_NAME, embed_pdf_request["senders_wa_id"], AWS_ACCESS_KEY, AWS_SECRET_KEY).add_message(SystemMesssage(content = f"These context might help you:\n\n{summary}"))
+        summary = process_pdf_document(
+            path_to_file, 
+            embed_pdf_request["senders_wa_id"], 
+            embed_pdf_request["media_id"], 
+            embed_pdf_request["caption"], 
+            embed_pdf_request["filename"], 
+            QDRANT_API_KEY, 
+            QDRANT_URL, 
+            QDRANT_COLLECTION_NAME, 
+            OPENAI_API_KEY
+        )
+        DynamoDBSessionManagement(
+            DYNAMODB_TABLE_NAME, 
+            embed_pdf_request["senders_wa_id"], 
+            AWS_ACCESS_KEY, 
+            AWS_SECRET_KEY).add_message(SystemMessage(content = f"These context might help you:\n\n{summary}"))
         try:
             send_bot_response = send_message(
                 get_text_message_input(embed_pdf_request["senders_wa_id"], summary + "\n\n_Use the_ *Rag* _keyword to ask these questions._"),
@@ -79,7 +93,31 @@ def post_embedd_url(embed_url_request):
     logging.info("Embedding URL document.")
 
     try:
-        process_url_document(embed_url_request.url_address, embed_url_request.senders_wa_id, embed_url_request.caption, QDRANT_API_KEY, QDRANT_URL, QDRANT_COLLECTION_NAME, OPENAI_API_KEY)
+        summary = process_url_document(
+            embed_url_request["url_address"], 
+            embed_url_request["senders_wa_id"], 
+            embed_url_request["caption"], 
+            QDRANT_API_KEY, 
+            QDRANT_URL, 
+            QDRANT_COLLECTION_NAME, 
+            OPENAI_API_KEY
+        )
+        DynamoDBSessionManagement(
+            DYNAMODB_TABLE_NAME, 
+            embed_url_request["senders_wa_id"], 
+            AWS_ACCESS_KEY, 
+            AWS_SECRET_KEY).add_message(SystemMessage(content = f"These context might help you:\n\n{summary}"))
+        try:
+            send_bot_response = send_message(
+                get_text_message_input(embed_url_request["senders_wa_id"], summary + "\n\n_Use the_ *Rag* _keyword to ask these questions._"),
+                WHATSAPP_VERSION,
+                WHATSAPP_ACCESS_TOKEN,
+                WHATSAPP_PHONE_NUMBER_ID 
+            )
+            assert send_bot_response.status_code == 200
+        except Exception as e:
+            logging.error(f"An error occurred while sending the summary: {e}")
+
     except Exception as e:
         logging.error(f"An error occurred while embedding url: {e}")
     
