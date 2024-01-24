@@ -18,6 +18,8 @@ from app.services.general_utilities import (
     send_message,
     get_text_message_input
 )
+
+from app.services.service_utilities import detect_and_extract_urls
 import asyncio
 import time
 
@@ -96,12 +98,32 @@ async def handle_message(request: Request):
             
             if message_type == "text":
                 message_body = message["text"]["body"]
-                agent_call_body = {
-                    "message_body": message_body,
-                    "senders_wa_id": wa_id
-                }
-                agent_call_response = agent_call(agent_call_request=agent_call_body)
-                return JSONResponse(content = {'answer': agent_call_response})
+                detected_urls = detect_and_extract_urls(message_body)
+                if len(detected_urls) > 0:
+                    send_message(
+                        get_text_message_input(
+                            wa_id, 
+                            f"_Processing your urls_..."
+                        ),
+                        WHATSAPP_VERSION,
+                        WHATSAPP_ACCESS_TOKEN,
+                        WHATSAPP_PHONE_NUMBER_ID
+                    )
+                    for url in detected_urls:
+                        url_request_body = {
+                            "url_address": url,
+                            "senders_wa_id": wa_id,
+                            "caption": message_body
+                        }
+                        post_embedd_url(embed_url_request = url_request_body)
+                    return JSONResponse(content = {'answer': "Url indexed."})
+                else:
+                    agent_call_body = {
+                        "message_body": message_body,
+                        "senders_wa_id": wa_id
+                    }
+                    agent_call_response = agent_call(agent_call_request=agent_call_body)
+                    return JSONResponse(content = {'answer': agent_call_response})
                 
             elif message_type == "document" or message_type == "image":
                 mime_type = message[message_type]["mime_type"]
