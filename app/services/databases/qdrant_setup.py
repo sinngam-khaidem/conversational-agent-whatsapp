@@ -66,6 +66,23 @@ def build_sentence_window_query_engine(senders_wa_id:str, cohere_api_key:str, op
                             )
     return sentence_window_engine
 
+def build_index_retriever(senders_wa_id:str,openai_api_key:str, qdrant_url:str, qdrant_api_key:str, qdrant_collection_name:str, similarity_top_k=12):
+    from llama_index.vector_stores.types import MetadataFilters, ExactMatchFilter
+    from app.services.databases.qdrant_setup import build_sentence_window_index
+    index = build_sentence_window_index(openai_api_key, qdrant_url, qdrant_api_key, qdrant_collection_name)
+    node_retriever = index.as_retriever(
+                                filters=MetadataFilters(
+                                    filters=[
+                                        ExactMatchFilter(
+                                            key="group_id",
+                                            value=senders_wa_id,
+                                        )
+                                    ]
+                                ),
+                                similarity_top_k=similarity_top_k
+                            )
+    return node_retriever
+
 def load_qdrant_connection(qdrant_url: str, qdrant_api_key:str, qdrant_collection_name:str):
     try:
         import qdrant_client
