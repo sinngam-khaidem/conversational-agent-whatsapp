@@ -20,8 +20,8 @@ This is another tool you can use to retrieve the files/URL that you shared back.
 ## Handling Chat Memory
 A DynamoDB instance is used to store and retrieve chat memory. It only has as Partition Key(No sort key). The value of the partition keys will be the sender's whatsapp_id.
 
-Name of the table: "RealtyaiWhatsappBotSessionTable"
-Name of the Partition Key: "SessionId"
-Billing Mode: "PAY_PER_REQUEST"
+Name of the table: "RealtyaiWhatsappBotSessionTable"  
+Name of the Partition Key: "SessionId"  
+Billing Mode: "PAY_PER_REQUEST"  
 
 Whenever a sender's request gets directed to the /agent endpoint, his whatsapp phone number id will be used to retrieve his entire chat interactions. The most recent interaction(Human:..., AI:....) will be clipped and used in the prompt template, thereby making in agent understand the context of the interaction.
