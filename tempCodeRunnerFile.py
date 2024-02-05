@@ -1,0 +1,1 @@
+["application/pdf", "image/jpeg", "image/png"]

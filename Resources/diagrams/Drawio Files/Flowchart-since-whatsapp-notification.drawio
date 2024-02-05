@@ -1,0 +1,272 @@
+<mxfile host="app.diagrams.net" modified="2024-02-04T14:16:57.079Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="odH5AeSw2W0av1YuMQnn" version="22.1.18" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1764" dy="1009" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2336" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-0" target="p-uIQ_QM5IrSpMrJIItU-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-0" value="Message notification came from whatsapp" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="230" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-2" target="p-uIQ_QM5IrSpMrJIItU-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-2" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="410" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="440" y="330" />
+              <mxPoint x="230" y="330" />
+              <mxPoint x="230" y="1043" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-2" value="Is it only a whatsapp status update&lt;br&gt;?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="390" y="205" width="100" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-5" target="p-uIQ_QM5IrSpMrJIItU-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-5" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="330" />
+              <mxPoint x="230" y="330" />
+              <mxPoint x="230" y="1043" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-5" value="Is it a valid whatsapp message?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="530" y="200" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-8" target="p-uIQ_QM5IrSpMrJIItU-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-8" value="Extract &lt;font color=&quot;#ff3333&quot;&gt;&lt;b&gt;msg_id&lt;/b&gt;, &lt;b&gt;name&lt;/b&gt;, &lt;b&gt;whasapp ID&lt;/b&gt;, &lt;b&gt;message&lt;/b&gt;, &lt;b&gt;message_type&lt;/b&gt; &lt;/font&gt;and &lt;b&gt;timestamp&lt;/b&gt; from the message payload" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="650" y="190" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-13" target="p-uIQ_QM5IrSpMrJIItU-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-13" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="980" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="230" y="400" />
+              <mxPoint x="230" y="1043" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-13" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;Is the incoming &lt;font color=&quot;#ff0000&quot;&gt;&lt;b&gt;msg_id &lt;/b&gt;&lt;/font&gt;in msg_id cache and sent within last 5 mins? &lt;br&gt;(Deduplication step)&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="622.5" y="340" width="175" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-15" target="p-uIQ_QM5IrSpMrJIItU-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-15" target="p-uIQ_QM5IrSpMrJIItU-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-15" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="687.5" y="522.5" width="45" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-17" target="p-uIQ_QM5IrSpMrJIItU-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-17" value="Extract the message body." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="520" y="517.5" width="70" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-19" value="message_type == &quot;text&quot;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="620" y="512.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-20" target="p-uIQ_QM5IrSpMrJIItU-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-20" value="Detect and extract all urls in the message body. Returns a list of detected urls&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="320" y="510" width="130" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-22" target="p-uIQ_QM5IrSpMrJIItU-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-22" target="p-uIQ_QM5IrSpMrJIItU-59">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-22" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="357.5" y="612.5" width="55" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-25" target="p-uIQ_QM5IrSpMrJIItU-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-25" value="Embed the contents of the url by passing the payload as a parameter" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;shadow=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="580" y="822.5" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-27" value="len(extracted_urls)&amp;gt;0" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="460" y="602.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-28" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="385" y="1042" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-28" value="Make the call to the conversation agent. Pass message body and whatsapp id as parameters." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;shadow=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="322.5" y="722.5" width="125" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-31" value="len(extracted_urls)==0" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="250" y="652.5" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-32" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="630" y="1150" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-33" target="p-uIQ_QM5IrSpMrJIItU-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-33" value="Return a 200 OK response from the webhook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="595" y="1012.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-38" target="p-uIQ_QM5IrSpMrJIItU-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-38" value="Extract the &lt;b&gt;&lt;font color=&quot;#ff0000&quot;&gt;mime type&lt;/font&gt;&lt;/b&gt; of the message" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1150" y="512.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-40" value="message_type == &quot;document&quot; or message_type == &quot;image&quot;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="817" y="500" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-41" target="p-uIQ_QM5IrSpMrJIItU-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-41" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1185" y="630" />
+              <mxPoint x="840" y="630" />
+              <mxPoint x="840" y="1043" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-41" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1185" y="607.5" width="50" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-43" target="p-uIQ_QM5IrSpMrJIItU-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-43" target="p-uIQ_QM5IrSpMrJIItU-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-43" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1295" y="797.5" as="sourcePoint" />
+            <mxPoint x="770" y="1040.0000000000002" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1505" y="722" />
+              <mxPoint x="1505" y="1120" />
+              <mxPoint x="810" y="1120" />
+              <mxPoint x="810" y="1042" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-43" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1180" y="697.5" width="60" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-45" value="Accepted Mime type&lt;br&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1220" y="668.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-46" target="p-uIQ_QM5IrSpMrJIItU-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-46" value="Create a payload of the incoming PDF file containing &lt;b&gt;filename&lt;/b&gt;, &lt;b&gt;media ID&lt;/b&gt;, &lt;b&gt;sender&#39;s wa id&lt;/b&gt;,&lt;b&gt; caption&lt;/b&gt;, &lt;b&gt;media type&lt;/b&gt; and &lt;b&gt;mime type&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="880" y="822.5" width="210" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-48" value="mime_type == &quot;application/pdf&quot;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="950" y="692.5" width="173" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-91" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-49" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="985" y="1120" />
+              <mxPoint x="811" y="1120" />
+              <mxPoint x="811" y="1042" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-49" value="Embed the contents of the PDF by passing the payload as a parameter&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="906.5" y="1012.5" width="157" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-52" target="p-uIQ_QM5IrSpMrJIItU-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-52" value="Create a payload of the incoming Image file containg filename, media ID, sender&#39;s wa id, caption, media type and mime type" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;gradientColor=#b3b3b3;strokeColor=#666666;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1100" y="822.5" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-54" value="mime_type == &quot;image/jpeg&quot; or mime_type == &quot;image/png&quot;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1063.5" y="767.5" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-89" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-55" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="1120" />
+              <mxPoint x="810" y="1120" />
+              <mxPoint x="810" y="1043" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-55" value="Embed the contents of the image by passing the payload as a parameter" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;fillColor=#f5f5f5;strokeColor=#666666;gradientColor=#b3b3b3;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1131.5" y="1012.5" width="157" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-59" target="p-uIQ_QM5IrSpMrJIItU-61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-59" target="p-uIQ_QM5IrSpMrJIItU-33">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="632" />
+              <mxPoint x="810" y="1042" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-59" value="extracted_urls is not empty?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="605" y="592.5" width="110" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-uIQ_QM5IrSpMrJIItU-61" target="p-uIQ_QM5IrSpMrJIItU-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-61" value="Create a payload of the URL containing url address, sender&#39;s wa id and caption&lt;br&gt;&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="580" y="722.5" width="160" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-67" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="610" y="682.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-70" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="740" y="602.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-76" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="697" y="470" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-79" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="388" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-80" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="480" y="210" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-82" value="Yes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="600" y="210" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-84" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="525" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-88" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="520" y="370" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-92" value="Any other mime type" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1350" y="692.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-uIQ_QM5IrSpMrJIItU-96" value="&lt;h1&gt;&lt;font style=&quot;font-size: 37px;&quot;&gt;&lt;u&gt;Trigerring Whatsapp Cloud API Webhook&lt;/u&gt;&lt;/font&gt;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="180" y="100" width="1330" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
