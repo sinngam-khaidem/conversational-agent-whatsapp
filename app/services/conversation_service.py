@@ -21,7 +21,7 @@ import openai
 
 from qdrant_client.http import models as qdrant_models
 from langchain.globals import set_debug
-set_debug(True)
+set_debug(False)
 
 from app.services.web_search_service.ddg_search_service import DDGWithVectorSearchWrappper
 from app.services.databases.qdrant_setup import (
@@ -33,8 +33,7 @@ from app.services.databases.qdrant_setup import (
 from app.services.databases.dynamodb_setup import DynamoDBSessionManagement
 from app.services.service_utilities import (
         merge_nodes_to_source, 
-        detect_and_extract_urls,
-        shorten_url
+        detect_and_extract_urls
     )
 from app.services.general_utilities import (
         send_message,

@@ -1,7 +1,6 @@
 import requests
 import trafilatura
 from langchain_core.embeddings import Embeddings
-from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.docstore.document import Document
@@ -18,11 +17,11 @@ class DDGWithVectorSearchWrappper:
                 separators = ["\n\n", "\n", ".", ""],
                 length_function = len
             ),
-        embeddings = FastEmbedEmbeddings(model_name = "BAAI/bge-small-en-v1.5")
+        # embedding_model = TextEmbedding(model_name = "BAAI/bge-small-en-v1.5")
         ):
 
         self.text_splitter = text_splitter
-        self.embeddings = embeddings
+        # self.embeddings = embedding_model
 
     def _get_content(self, url):
         downloaded = trafilatura.fetch_url(
@@ -31,26 +30,26 @@ class DDGWithVectorSearchWrappper:
         content = trafilatura.extract(downloaded)
         return content
 
-    def descriptive_search(self, query: str, page_result_count: int = 2, search_result_count: int = 4):
-        with DDGS() as ddgs:
-            results = [r for r in ddgs.text(keywords = f"{query} -site:youtube.com", region="wt-wt", safesearch = "moderate", backend="api", max_results=page_result_count)]
-            results_list = []
+    # def descriptive_search(self, query: str, page_result_count: int = 2, search_result_count: int = 4):
+    #     with DDGS() as ddgs:
+    #         results = [r for r in ddgs.text(keywords = f"{query} -site:youtube.com", region="wt-wt", safesearch = "moderate", backend="api", max_results=page_result_count)]
+    #         results_list = []
             
-            for result in results:
-                link = result["href"]
-                title = result["title"]
-                raw_content = self._get_content(link)
-                content = raw_content if raw_content else result.get("body", "")
-                doc = Document(page_content=content, metadata={"source": link, "title": title})
-                results_list.append(doc)
+    #         for result in results:
+    #             link = result["href"]
+    #             title = result["title"]
+    #             raw_content = self._get_content(link)
+    #             content = raw_content if raw_content else result.get("body", "")
+    #             doc = Document(page_content=content, metadata={"source": link, "title": title})
+    #             results_list.append(doc)
 
-            logging.info(f"{len(results_list)} results in results_list")
-            docs = self.text_splitter.split_documents(results_list)
-            logging.info(f"Created {len(docs)} documents.")
-            db = FAISS.from_documents(docs, self.embeddings)
+    #         logging.info(f"{len(results_list)} results in results_list")
+    #         docs = self.text_splitter.split_documents(results_list)
+    #         logging.info(f"Created {len(docs)} documents.")
+    #         db = FAISS.from_documents(docs, self.embeddings)
 
-            found_docs = db.similarity_search(query, k=search_result_count)
-            return found_docs
+    #         found_docs = db.similarity_search(query, k=search_result_count)
+    #         return found_docs
 
     def quick_search(self, query: str, page_result_count: int = 4):
         with DDGS() as ddgs:

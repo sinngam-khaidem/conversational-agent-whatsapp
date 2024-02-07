@@ -85,16 +85,7 @@ async def handle_message(request: Request):
                 return JSONResponse(content = {'body': "message already seen"}, status_code=200)
             else:
                 cache[msg_id] = True
-            print(cache)
-
-            # Schedule the asynchronous function to run in the background
-            mark_read_task = asyncio.create_task(mark_msg_as_read(
-                                        msg_id,
-                                        WHATSAPP_VERSION,
-                                        WHATSAPP_PHONE_NUMBER_ID,
-                                        WHATSAPP_ACCESS_TOKEN
-                                    )
-                    )
+            #print(cache)
             
             if message_type == "text":
                 message_body = message["text"]["body"]

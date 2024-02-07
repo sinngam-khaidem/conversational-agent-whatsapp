@@ -24,9 +24,13 @@ def process_pdf_document(
             datetime_to_str
         )
         from app.services.service_utilities import generate_summary 
+
+        # Load all the pages of the PDF
         reader = SimpleDirectoryReader(input_files = [file_path])
         documents = reader.load_data()
         logging.info("Document successfully read from the directory.")
+
+        # Stitch all pages of the document
         document = Document(
             text = "\n\n".join([doc.text for doc in documents]),
             metadata={
@@ -39,10 +43,15 @@ def process_pdf_document(
                 "date": datetime_to_str(get_current_time())
                 }
             )
+
+        # Generate summary of the first 3000 characters
         summary = generate_summary(document.text[:3000], openai_api_key)
+
+        # Insert the document in the vector store
         sentence_index = build_sentence_window_index(openai_api_key, qdrant_url, qdrant_api_key, qdrant_collection_name)
         sentence_index.insert(document=document)
         return summary
+        
     except Exception as e:
         logging.error(f"An error occurred while indexing the document: {e}")
 
