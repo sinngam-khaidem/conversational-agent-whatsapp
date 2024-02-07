@@ -28,6 +28,7 @@ def process_url_document(
         )
         content = trafilatura.extract(downloaded)
 
+        # Create a document using content of the URL
         document = Document(
             text = content,
             metadata= {
@@ -40,9 +41,14 @@ def process_url_document(
                 'date': datetime_to_str(get_current_time())
             }
         )
+
+        # Generate summary of the first 3000 characters
         summary = generate_summary(document.text[:3000], openai_api_key)
+
+        # Insert the document of the vector store
         sentence_index = build_sentence_window_index(openai_api_key, qdrant_url, qdrant_api_key, qdrant_collection_name)
         sentence_index.insert(document=document)
+        
         return summary
         
     except Exception as e:

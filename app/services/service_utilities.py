@@ -5,7 +5,6 @@ from typing import List, Dict
 from urlextract import URLExtract
 from datetime import datetime
 import pytz
-import pyshorteners
 import logging
 from llama_index.schema import NodeWithScore
 
@@ -70,14 +69,7 @@ def merge_nodes_to_source(nodes: List[NodeWithScore]) -> List[str]:
 
     return max_frequency_keys
 
-def shorten_url(long_url:str):
-    try:
-        type_tiny = pyshorteners.Shortener()
-        short_url = type_tiny.tinyurl.short(long_url)
-        return short_url
-    except Exception as e:
-        return long_url
-
+# Generates a summary of the indexed document using Map Reduce algorithm
 def generate_summary(text:str, openai_api_key:str):
     from langchain.chains.summarize import load_summarize_chain
     from langchain.text_splitter import RecursiveCharacterTextSplitter

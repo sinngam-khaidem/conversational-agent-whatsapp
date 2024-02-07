@@ -4,6 +4,7 @@ import json
 def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_key:str, qdrant_collection_name:str):
     import openai
     from llama_index.embeddings import FastEmbedEmbedding
+    from llama_index.embeddings import OpenAIEmbedding
     from llama_index.llms import OpenAI
     import qdrant_client
     from llama_index.node_parser import SentenceWindowNodeParser
@@ -24,7 +25,11 @@ def build_sentence_window_index(openai_api_key:str, qdrant_url:str, qdrant_api_k
         )
 
         llm = OpenAI(model = "gpt-3.5-turbo", temperature = 0.1, max_tokens=128)
-        embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
+
+        # Create an instance of the embedding model to be used
+        # embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
+        embed_model = OpenAIEmbedding(model_name="text-embedding-3-small")
+
         sentence_node_parser = SentenceWindowNodeParser.from_defaults(
                             window_size = 4,
                             window_metadata_key = "window",
@@ -56,6 +61,7 @@ def build_sentence_window_query_engine(
     from llama_index.indices.postprocessor import MetadataReplacementPostProcessor
     from llama_index.vector_stores.types import MetadataFilters, ExactMatchFilter
     from app.services.databases.qdrant_setup import build_sentence_window_index
+    
     sentence_index = build_sentence_window_index(openai_api_key, qdrant_url, qdrant_api_key, qdrant_collection_name)
     postproc = MetadataReplacementPostProcessor(
         target_metadata_key="window"
