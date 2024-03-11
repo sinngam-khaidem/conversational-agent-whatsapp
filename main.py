@@ -14,24 +14,21 @@ from app.services.general_utilities import (
     send_message,
     get_text_message_input
 )
-
 from app.services.service_utilities import detect_and_extract_urls
 import time
-
 load_dotenv()
 
+# Load the necessary Whatsapp Cloud API credentials.
 VERIFY_TOKEN = os.getenv('WHATSAPP_VERIFY_TOKEN')
 WHATSAPP_ACCESS_TOKEN = os.getenv('WHATSAPP_ACCESS_TOKEN')
 WHATSAPP_VERSION = os.getenv('WHATSAPP_VERSION')
 WHATSAPP_PHONE_NUMBER_ID = os.getenv('WHATSAPP_PHONE_NUMBER_ID')
 
 myapp = FastAPI()
-
-# Creating a cache with a TTL of 300 seconds
+# Creating a cache with a TTL of 300 seconds. This will be use to deduplicate incoming packets.
 cache = TTLCache(maxsize=1000, ttl=300)
 
-
-# Required webhook verifictaion for WhatsApp
+# Whatsapp Cloud API Verification Requests endpoint.
 @myapp.get("/webhook")
 def verify(request: Request):
     print("subscribe is being called")
@@ -40,6 +37,7 @@ def verify(request: Request):
         return JSONResponse(content=int(request.query_params.get('hub.challenge')), status_code=200)
     return "Authentication failed. Invalid Token."
 
+# Whatapp Cloud API Event Notifications endpoint.
 @myapp.post("/webhook")
 async def handle_message(request: Request):
     """
@@ -69,19 +67,18 @@ async def handle_message(request: Request):
     try:
         if is_valid_whatsapp_message(body):
             msg_id = body["entry"][0]["changes"][0]["value"]["messages"][0]["id"]
-            name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
             wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
             message = body["entry"][0]["changes"][0]["value"]["messages"][0]
             message_type = message["type"]
             timestamp = message["timestamp"]
 
-            # If msg id is in cache or notification is older than 5 mins, we won't entertain that status change update.
+            # If message ID is in cache or notification is older than 5 mins, we won't entertain such event notifications.
             if cache.get(msg_id) is not None or int(timestamp) < int(time.time()) - 300:
                 return JSONResponse(content = {'body': "message already seen"}, status_code=200)
             else:
                 cache[msg_id] = True
-            #print(cache)
             
+            # Incoming notification is for a text message.
             if message_type == "text":
                 message_body = message["text"]["body"]
                 detected_urls = detect_and_extract_urls(message_body)
@@ -110,20 +107,21 @@ async def handle_message(request: Request):
                     }
                     agent_call_response = agent_call(agent_call_request=agent_call_body)
                     return JSONResponse(content = {'answer': agent_call_response})
-                
+            
+            # Incoming notification is for a document or an image.
             elif message_type == "document" or message_type == "image":
                 mime_type = message[message_type]["mime_type"]
                 if mime_type in ["application/pdf", "image/jpeg", "image/png"]:
+                    send_message(
+                        get_text_message_input(
+                            wa_id, 
+                            f"_Processing your media_..."
+                        ),
+                        WHATSAPP_VERSION,
+                        WHATSAPP_ACCESS_TOKEN,
+                        WHATSAPP_PHONE_NUMBER_ID
+                    )
                     if mime_type == "application/pdf":
-                        send_message(
-                            get_text_message_input(
-                                wa_id, 
-                                f"_Processing your media_..."
-                            ),
-                            WHATSAPP_VERSION,
-                            WHATSAPP_ACCESS_TOKEN,
-                            WHATSAPP_PHONE_NUMBER_ID
-                        )
                         pdf_file_request_body = {
                             "filename": message[message_type].get("filename", "Unamed"),
                             "media_id": message[message_type]["id"],
@@ -133,15 +131,6 @@ async def handle_message(request: Request):
                             "mime_type": mime_type
                         }
                         embedd_pdf(embed_pdf_request=pdf_file_request_body)
-                        # send_message(
-                        #     get_text_message_input(
-                        #         wa_id, 
-                        #         f"_Media successfully processed._"
-                        #     ),
-                        #     WHATSAPP_VERSION,
-                        #     WHATSAPP_ACCESS_TOKEN,
-                        #     WHATSAPP_PHONE_NUMBER_ID
-                        # )
                         return JSONResponse(content = {'body': 'Successfully indexed your media.'}, status_code = 200)
                     else:
                         return JSONResponse(content= {'body': 'Invalid mime type'}, status_code = 200)
@@ -149,74 +138,5 @@ async def handle_message(request: Request):
         print(f"An error occured: {e}")
         return JSONResponse(status_code = 500)
 
-# Whatsapp Notification Payload Examples
-# 1. Text Messages
-# {
-#   "object": "whatsapp_business_account",
-#   "entry": [{
-#       "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-#       "changes": [{
-#           "value": {
-#               "messaging_product": "whatsapp",
-#               "metadata": {
-#                   "display_phone_number": PHONE_NUMBER,
-#                   "phone_number_id": PHONE_NUMBER_ID
-#               },
-#               "contacts": [{
-#                   "profile": {
-#                     "name": "NAME"
-#                   },
-#                   "wa_id": PHONE_NUMBER
-#                 }],
-#               "messages": [{
-#                   "from": PHONE_NUMBER,
-#                   "id": "wamid.ID",
-#                   "timestamp": TIMESTAMP,
-#                   "text": {
-#                     "body": "MESSAGE_BODY"
-#                   },
-#                   "type": "text"
-#                 }]
-#           },
-#           "field": "messages"
-#         }]
-#   }]
-# }
-#
-# 2. Media Message
-# {
-#   "object": "whatsapp_business_account",
-#   "entry": [{
-#       "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-#       "changes": [{
-#           "value": {
-#               "messaging_product": "whatsapp",
-#               "metadata": {
-#                   "display_phone_number": PHONE_NUMBER,
-#                   "phone_number_id": PHONE_NUMBER_ID
-#               },
-#               "contacts": [{
-#                   "profile": {
-#                     "name": "NAME"
-#                   },
-#                   "wa_id": "WHATSAPP_ID"
-#                 }],
-#               "messages": [{
-#                   "from": PHONE_NUMBER,
-#                   "id": "wamid.ID",
-#                   "timestamp": TIMESTAMP,
-#                   "type": "image",
-#                   "image": {
-#                     "caption": "CAPTION",
-#                     "mime_type": "image/jpeg",
-#                     "sha256": "IMAGE_HASH",
-#                     "id": "ID"
-#                   }
-#                 }]
-#           },
-#           "field": "messages"
-#         }]
-#     }]
-# }
-# 
-# Other Payloads: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples
+# Payload examples:
+# https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples
