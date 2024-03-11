@@ -1,4 +1,4 @@
-from typing import List, Union, Optional, Dict
+from typing import List
 from langchain.tools.base import BaseTool, Tool
 from langchain_core.messages import (
         SystemMessage, 
@@ -66,7 +66,6 @@ class RealtyaiBot:
         # Define 2 important state variables
         self.senders_wa_id = senders_wa_id
         self.citations = []
-
         # Define prompt for the conversation agent
         self.prompt = ChatPromptTemplate(
             messages = [
@@ -76,7 +75,6 @@ class RealtyaiBot:
                 MessagesPlaceholder(variable_name="agent_scratchpad")
             ]
         )
-
         # Define tools that can be used by the OpenaiFunctionsAgent
         self.tools = [
             Tool(
@@ -97,12 +95,9 @@ class RealtyaiBot:
                 description="Useful when you are asked to retrieve or user wants you to send him Files, PDFs, text files, URLs etc.",
                 return_direct = "True"
             ),
-
         ]
-
         self.llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key,max_tokens=128, temperature=0.1)
-
-        # Create an instance of the DynamoDBSessionManagement to handle chat history, number of interaction etc.abs
+        # Create an instance of the DynamoDBSessionManagement to handle chat history, number of interaction etc.
         self.dynamodb = DynamoDBSessionManagement(
                 table_name=dynamo_db_table_name,
                 session_id=senders_wa_id,
@@ -124,14 +119,13 @@ class RealtyaiBot:
         try:
             citations_to_append = ""
             unique_citations = set()
-
             # Retreive the chat interactions of the user from DynamoDB
             chat_history = self.dynamodb.messages()
             last_few_chat_interactions = chat_history[-6:]
             pruned_messages = self._prune_long_messages(last_few_chat_interactions)
             response = self.agent_executor.invoke({"input": user_input, "history": pruned_messages})
 
-            # Append the new interactions to dynamoDB
+            # Append the new interaction to DynamoDB
             self.dynamodb.add_message(HumanMessage(content=user_input))
             self.dynamodb.add_message(AIMessage(content=response["output"]))
 
@@ -141,11 +135,9 @@ class RealtyaiBot:
                 citations_to_append += f"{i+1}. {item}\n"
 
             final_answer = f"""{response["output"]}\n\n{citations_to_append}"""
-            # print(final_answer)
             return final_answer
         except Exception as e:
             logging.error(f"An error occurred in response call: {e}")
-            
 
     def _rag(self, query:str) -> str:
         try:
@@ -177,7 +169,6 @@ class RealtyaiBot:
             logging.error(f"An error occurred in the rag tool: {e}")
             return "_Failed the Rag._"
             
-
     def _search(self, query:str) -> str:
         try:
             send_message(
@@ -263,12 +254,11 @@ class RealtyaiBot:
         return messages
 
             
-
 if __name__ == "__main__":
     from dotenv import load_dotenv
     import os
     bot = RealtyaiBot(
-            "919089342948", 
+            "91xxxxxxxxxx", 
             os.getenv("OPENAI_API_KEY"), 
             os.getenv("AWS_ACCESS_KEY_ID"), 
             os.getenv("AWS_SECRET_ACCESS_KEY"),
