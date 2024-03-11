@@ -1,11 +1,3 @@
-from app.data_models.request_data_models import (
-        PdfFileRequest,
-        ImageFileRequest,
-        TextFileRequest,
-        UrlRequest,
-        AgentCallRequest
-    )
-
 from app.services.general_utilities import (
     get_media_file_content_from_whatsapp,
     process_text_for_whatsapp,
@@ -40,7 +32,7 @@ WHATSAPP_PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_NUMBER_ID")
 WHATSAPP_VERSION = os.getenv("WHATSAPP_VERSION")
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
-def post_embedd_pdf(embed_pdf_request):
+def embedd_pdf(embed_pdf_request):
     """Embeds the pdf document to the vector database"""
     temp_files_dir = "./app/temp_files_dir"
     s3_object_key = f"user_resources/{embed_pdf_request['senders_wa_id']}/{embed_pdf_request['media_id']}.pdf"
@@ -88,7 +80,7 @@ def post_embedd_pdf(embed_pdf_request):
     
 
 
-def post_embedd_url(embed_url_request):
+def embedd_url(embed_url_request):
     """Embeds the url address to the vector database"""
     logging.info("Embedding URL document.")
 
