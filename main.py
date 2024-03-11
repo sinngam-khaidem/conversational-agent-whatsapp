@@ -8,8 +8,8 @@ import os
 from dotenv import load_dotenv
 import json
 from app.tasks import (
-    post_embedd_pdf,
-    post_embedd_url,
+    embedd_pdf,
+    embedd_url,
     agent_call
 )
 from app.services.general_utilities import (
@@ -106,7 +106,7 @@ async def handle_message(request: Request):
                             "senders_wa_id": wa_id,
                             "caption": message_body
                         }
-                        post_embedd_url(embed_url_request = url_request_body)
+                        embedd_url(embed_url_request = url_request_body)
                     return JSONResponse(content = {'answer': "Url indexed."})
                 else:
                     agent_call_body = {
@@ -137,7 +137,7 @@ async def handle_message(request: Request):
                             "media_type": message_type,
                             "mime_type": mime_type
                         }
-                        post_embedd_pdf(embed_pdf_request=pdf_file_request_body)
+                        embedd_pdf(embed_pdf_request=pdf_file_request_body)
                         # send_message(
                         #     get_text_message_input(
                         #         wa_id, 

@@ -233,9 +233,7 @@ class RealtyaiBot:
                 self.qdrant_collection_name
             )
             nodes = node_retriever.retrieve(str_or_query_bundle=query)
-            print(nodes)
             final_media_ids = merge_nodes_to_source(nodes)
-            print(final_media_ids)
             if len(final_media_ids)>0:
                 for each_id in final_media_ids:
                     if each_id != "_blank":
