@@ -1,12 +1,8 @@
-import logging
 from cachetools import TTLCache
-import functools
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-import requests
 import os
 from dotenv import load_dotenv
-import json
 from app.tasks import (
     embedd_pdf,
     embedd_url,
@@ -20,7 +16,6 @@ from app.services.general_utilities import (
 )
 
 from app.services.service_utilities import detect_and_extract_urls
-import asyncio
 import time
 
 load_dotenv()
