@@ -3,32 +3,23 @@ from langchain.tools.base import BaseTool, Tool
 from langchain_core.messages import (
         SystemMessage, 
         HumanMessage, 
-        AIMessage,
-        ToolMessage, 
-        get_buffer_string
-    )
+        AIMessage
+)
 from langchain_core.prompts.chat import (
         MessagesPlaceholder, 
         ChatPromptTemplate, 
         HumanMessagePromptTemplate, 
         BasePromptTemplate,
-
-    )
+)
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 import logging
-import openai
-
-from qdrant_client.http import models as qdrant_models
 from langchain.globals import set_debug
 set_debug(False)
-
 from app.services.web_search_service.ddg_search_service import DDGWithVectorSearchWrappper
 from app.services.databases.qdrant_setup import (
-    build_sentence_window_index,
     build_sentence_window_query_engine,
     build_index_retriever,
-    load_qdrant_connection
 )
 from app.services.databases.dynamodb_setup import DynamoDBSessionManagement
 from app.services.service_utilities import (
@@ -138,7 +129,6 @@ class RealtyaiBot:
             chat_history = self.dynamodb.messages()
             last_few_chat_interactions = chat_history[-6:]
             pruned_messages = self._prune_long_messages(last_few_chat_interactions)
-
             response = self.agent_executor.invoke({"input": user_input, "history": pruned_messages})
 
             # Append the new interactions to dynamoDB
