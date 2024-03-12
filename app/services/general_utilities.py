@@ -83,7 +83,6 @@ def get_text_message_input(recipient, text, preview_url=False):
         }
     )
 
-
 def send_message(data, whatsapp_version:str, whatsapp_access_token: str, whatsapp_phone_number_id: str):
     headers = {
         "Content-type": "application/json",
