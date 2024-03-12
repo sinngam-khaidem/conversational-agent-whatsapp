@@ -56,3 +56,29 @@ or
 ```
 pip3 install -r requirements.txt
 ```
+5. Fill up the *environment_variables.txt* file and rename it to *.env*.
+Fill **VERIFY_TOKEN** field to "12345".
+6. Run the following command in the terminal to start the FastAPI server using Uvicorn.
+```
+uvicorn main:myapp --reload
+```
+The application will start running at port 8000.
+7. In a separate terminal tab, run the following ngrok command to expose **localhost 8000**, so that it can be accessed from Whatsapp Cloud API.
+```
+ngrok http 8000
+```
+6. Copy the newly generated URL to clipboard and log into your Meta for Developer's account.
+7. Go to *My Apps*, open the Whatsapp Business App you created. The *API Setup* section will contain many useful informations.
+![DEMO](Resources/steps/meta-7-1.png)
+![DEMO](Resources/steps/meta-7-2.png)
+![DEMO](Resources/steps/meta-7-3.png)
+8. Open *Configuration* from the left panel. From *Webhooks Field*, click *Manage*.
+![DEMO](Resources/steps/meta-8.png)
+9. Look for *messages* in the list and check it. Then click *Done*.
+![DEMO](Resources/steps/meta-9.png)
+10. Click on *Edit* from the *Callback URL* section.
+![DEMO](Resources/steps/meta-10.png)
+11. Paste the ngrok URL generated earlier in the *Callback URl* field. Append "/webhook" after the URL. Fill "12345" in the *Verify Token* field. This has to be same with the **VERIFY_TOKEN** we set earlier.
+![DEMO](Resources/steps/meta-11.png)
+12. You must recieve a notification of successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200OK response on the terminal where Ngrok is running.
+
