@@ -1,7 +1,5 @@
 import logging
 
-
-
 def process_url_document(
     source_url: str, 
     wa_id:str, 
@@ -13,7 +11,6 @@ def process_url_document(
     ):
     try:
         from llama_index import (
-            SimpleDirectoryReader, 
             Document
         )
         from app.services.databases.qdrant_setup import build_sentence_window_index
@@ -23,6 +20,9 @@ def process_url_document(
         )
         import trafilatura
         from app.services.service_utilities import generate_summary
+
+        # Fetch the contents of the url using trafilatura
+        # Documentation - https://trafilatura.readthedocs.io/en/latest/
         downloaded = trafilatura.fetch_url(
             url=source_url
         )
@@ -41,10 +41,9 @@ def process_url_document(
                 'date': datetime_to_str(get_current_time())
             }
         )
-
         # Generate summary of the first 3000 characters
         summary = generate_summary(document.text[:3000], openai_api_key)
-
+        
         # Insert the document of the vector store
         sentence_index = build_sentence_window_index(openai_api_key, qdrant_url, qdrant_api_key, qdrant_collection_name)
         sentence_index.insert(document=document)
