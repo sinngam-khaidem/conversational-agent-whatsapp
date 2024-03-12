@@ -29,7 +29,7 @@ This is another tool you can use to retrieve the files/URL that you shared back.
     - An AWS S3 bucket created (to store user's media).
     - A DynamoDB table created (to store chat history).
 
-## Steps
+## Steps:
 * Create a clone of the repostitory on your local machine using the following command.
 ```
 git clone https://github.com/sinngam-khaidem/Realtyai-Whatsapp-Conversation-Agent.git
@@ -60,7 +60,7 @@ or
 ```
 pip3 install -r requirements.txt
 ```
-* Fill up the *environment_variables.txt* file and rename it to *.env*. Fill **VERIFY_TOKEN** field to "12345".
+* Fill up the *env_template.txt* file and rename it to *.env*. Fill **VERIFY_TOKEN** field to "12345".
 
 * Run the following command in the terminal to start the FastAPI server using Uvicorn.
 ```
