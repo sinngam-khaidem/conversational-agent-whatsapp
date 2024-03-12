@@ -16,12 +16,14 @@ Once your document/link is properly proceessed, you can start asking questions f
 ### 3. File/URL Retrieval
 This is another tool you can use to retrieve the files/URL that you shared back. Use keywords like "Retrieve" to trigger this tool. Example prompts include "Retrieve my file on logistic regression" of "Send me back my file on logistic regression". This could be useful tool for bookmarking links or files, and retrieving them through natural language.
 
+# Running it on your system
+## Prerequisites:
+1. [A Meta for developer account and Whatsapp Business app.](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)
+2. [A free instance of Qdrant Cloud Cluster.](https://qdrant.tech/documentation/cloud/quickstart-cloud/)
+3. Cohere API key.
+4. [⁠Ngrok installed on your system.](https://ngrok.com/docs/getting-started/)
+5. OpenAI API key.
+6. ⁠A working AWS account.
 
-## Handling Chat Memory
-A DynamoDB instance is used to store and retrieve chat memory. It only has as Partition Key(No sort key). The value of the partition keys will be the sender's whatsapp_id.
+## Steps
 
-Name of the table: "RealtyaiWhatsappBotSessionTable"  
-Name of the Partition Key: "SessionId"  
-Billing Mode: "PAY_PER_REQUEST"  
-
-Whenever a sender's request gets directed to the /agent endpoint, his whatsapp phone number id will be used to retrieve his entire chat interactions. The most recent interaction(Human:..., AI:....) will be clipped and used in the prompt template, thereby making in agent understand the context of the interaction.
