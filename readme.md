@@ -24,6 +24,10 @@ This is another tool you can use to retrieve the files/URL that you shared back.
 * [⁠Ngrok installed on your system.](https://ngrok.com/docs/getting-started/)
 * OpenAI API key.
 * ⁠A working AWS account.
+    - AWS access key id.
+    - AWS secret access key.
+    - An AWS S3 bucket created (to store user's media).
+    - A DynamoDB table created (to store chat history).
 
 ## Steps
 * Create a clone of the repostitory on your local machine using the following command.
@@ -85,8 +89,8 @@ ngrok http 8000
 * Click on **Edit** from the **Callback URL** section.
 ![DEMO](Resources/steps/meta-10.png)
 
-* Paste the ngrok URL generated earlier in the *Callback URl* field. Append "/webhook" after the URL. Fill "12345" in the **Verify Token** field. This has to be same with the **VERIFY_TOKEN** we set earlier.
+* Paste the ngrok URL generated earlier in the **Callback URL** field. Append '/webhook' after the URL. Fill "12345" in the **Verify Token** field. This has to be same with the **VERIFY_TOKEN** we set earlier.
 ![DEMO](Resources/steps/meta-11.png)
 
-* You must recieve a notification of successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200OK response on the terminal where Ngrok is running.
+* You must recieve a notification for successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200 OK response on the terminal where Ngrok is running.
 
