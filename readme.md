@@ -16,12 +16,87 @@ Once your document/link is properly proceessed, you can start asking questions f
 ### 3. File/URL Retrieval
 This is another tool you can use to retrieve the files/URL that you shared back. Use keywords like "Retrieve" to trigger this tool. Example prompts include "Retrieve my file on logistic regression" of "Send me back my file on logistic regression". This could be useful tool for bookmarking links or files, and retrieving them through natural language.
 
+# Running it on your system
+## Prerequisites:
+* [A Meta for developer account and Whatsapp Business app.](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)
+* [A free instance of Qdrant Cloud Cluster.](https://qdrant.tech/documentation/cloud/quickstart-cloud/)
+* Cohere API key.
+* [⁠Ngrok installed on your system.](https://ngrok.com/docs/getting-started/)
+* OpenAI API key.
+* ⁠A working AWS account.
+    - AWS access key id.
+    - AWS secret access key.
+    - An AWS S3 bucket created (to store user's media).
+    - A DynamoDB table created (to store chat history).
 
-## Handling Chat Memory
-A DynamoDB instance is used to store and retrieve chat memory. It only has as Partition Key(No sort key). The value of the partition keys will be the sender's whatsapp_id.
+## Steps:
+* Create a clone of the repostitory on your local machine using the following command.
+```
+git clone https://github.com/sinngam-khaidem/Realtyai-Whatsapp-Conversation-Agent.git
+```
+* Inside the project directory, create a python virtual environment.<br>
+For **Windows**,
+```
+python -m venv myvenv
+```
+For **Unix/MacOS**,
+```
+python3 -m venv myvenv
+```
+* Activate the python virtual environment we just created.<br>
+For **Windows**,
+```
+myvenv\Scripts\activate
+```
+For **Unix/MacOS**,
+```
+source myvenv/bin/activate
+```
+* Install the required packages using the following command.
+```
+pip install -r requirements.txt
+```
+or
+```
+pip3 install -r requirements.txt
+```
+* Fill up the *env_template.txt* file and rename it to *.env*. Fill **VERIFY_TOKEN** field to "12345".
 
-Name of the table: "RealtyaiWhatsappBotSessionTable"  
-Name of the Partition Key: "SessionId"  
-Billing Mode: "PAY_PER_REQUEST"  
+* Run the following command in the terminal to start the FastAPI server using Uvicorn.
+```
+uvicorn main:myapp --reload
+```
+The application will start running at port 8000.
 
-Whenever a sender's request gets directed to the /agent endpoint, his whatsapp phone number id will be used to retrieve his entire chat interactions. The most recent interaction(Human:..., AI:....) will be clipped and used in the prompt template, thereby making in agent understand the context of the interaction.
+* In a separate terminal tab, run the following ngrok command to expose **localhost 8000**, so that it can be accessed from Whatsapp Cloud API.
+```
+ngrok http 8000
+```
+
+* Copy the newly generated URL to clipboard and log into your Meta for Developer's account.
+
+* Go to **My Apps**, open the Whatsapp Business App you created. The **API Setup** section will contain many useful informations.
+![DEMO](Resources/steps/meta-7-1.png)
+![DEMO](Resources/steps/meta-7-2.png)
+![DEMO](Resources/steps/meta-7-3.png)
+
+* Send a test message to your own whatsapp number (after adding a Recipient Phone Number) by clicking on **Send Message** from the **Send message with the API field**. This will send a **Template Message** to your whatsapp number. You **must** reply something(anything) to the "Hello World" message you receive. This is a way to discourage spammers.
+
+* Open **Configuration** from the left panel. From **Webhooks Field**, click **Manage**.
+![DEMO](Resources/steps/meta-8.png)
+
+* Look for **messages** in the list and check it.<br>
+Then click **Done**.
+![DEMO](Resources/steps/meta-9.png)
+
+* Click on **Edit** from the **Callback URL** section.
+![DEMO](Resources/steps/meta-10.png)
+
+* Paste the Ngrok URL we generated earlier to the **Callback URL** field. Append '/webhook' after the URL.<br>
+Fill "12345" in the **Verify Token** field. This has to be same with the **VERIFY_TOKEN** we set earlier.
+![DEMO](Resources/steps/meta-11.png)
+
+* You must recieve a notification for successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200 OK response on the terminal where Ngrok is running.
+
+#### Once these steps are completed, you can start texting the number.
+
