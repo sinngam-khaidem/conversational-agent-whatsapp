@@ -85,17 +85,18 @@ ngrok http 8000
 * Open **Configuration** from the left panel. From **Webhooks Field**, click **Manage**.
 ![DEMO](Resources/steps/meta-8.png)
 
-* Look for *messages* in the list and check it.<br>
-Then click *Done*.
+* Look for **messages** in the list and check it.<br>
+Then click **Done**.
 ![DEMO](Resources/steps/meta-9.png)
 
 * Click on **Edit** from the **Callback URL** section.
 ![DEMO](Resources/steps/meta-10.png)
 
-* Paste the Ngrok URL we generated earlier to the **Callback URL** field.<br> 
-Append '/webhook' after the URL.<br>
+* Paste the Ngrok URL we generated earlier to the **Callback URL** field. Append '/webhook' after the URL.<br>
 Fill "12345" in the **Verify Token** field. This has to be same with the **VERIFY_TOKEN** we set earlier.
 ![DEMO](Resources/steps/meta-11.png)
 
 * You must recieve a notification for successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200 OK response on the terminal where Ngrok is running.
+
+#### Once these steps are completed, you can start texting the number.
 
