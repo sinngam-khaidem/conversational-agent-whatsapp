@@ -30,7 +30,7 @@ This is another tool you can use to retrieve the files/URL that you shared back.
 ```
 git clone https://github.com/sinngam-khaidem/Realtyai-Whatsapp-Conversation-Agent.git
 ```
-2. Inside the project directory, create a python virtual environment.
+2. Inside the project directory, create a python virtual environment.<br>
 For **Windows**,
 ```
 python -m venv myvenv
@@ -39,7 +39,7 @@ For **Unix/MacOS**,
 ```
 python3 -m venv myvenv
 ```
-3. Activate the python virtual environment we just created.
+3. Activate the python virtual environment we just created.<br>
 For **Windows**,
 ```
 myvenv\Scripts\activate
