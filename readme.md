@@ -80,7 +80,7 @@ ngrok http 8000
 ![DEMO](Resources/steps/meta-7-2.png)
 ![DEMO](Resources/steps/meta-7-3.png)
 
-* Send a test message to your own whatsapp number by clicking on **Send Message** from the **Send message with the API field**. <br> This will send a template message to your whatsapp number. You **must** reply something(anything) to the "Hello World" message you receive. This is a way to discourage spammers.
+* Send a test message to your own whatsapp number (after adding a Recipient Phone Number) by clicking on **Send Message** from the **Send message with the API field**. This will send a **Template Message** to your whatsapp number. You **must** reply something(anything) to the "Hello World" message you receive. This is a way to discourage spammers.
 
 * Open **Configuration** from the left panel. From **Webhooks Field**, click **Manage**.
 ![DEMO](Resources/steps/meta-8.png)
