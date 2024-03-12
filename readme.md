@@ -18,19 +18,19 @@ This is another tool you can use to retrieve the files/URL that you shared back.
 
 # Running it on your system
 ## Prerequisites:
-1. [A Meta for developer account and Whatsapp Business app.](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)
-2. [A free instance of Qdrant Cloud Cluster.](https://qdrant.tech/documentation/cloud/quickstart-cloud/)
-3. Cohere API key.
-4. [⁠Ngrok installed on your system.](https://ngrok.com/docs/getting-started/)
-5. OpenAI API key.
-6. ⁠A working AWS account.
+* [A Meta for developer account and Whatsapp Business app.](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)
+* [A free instance of Qdrant Cloud Cluster.](https://qdrant.tech/documentation/cloud/quickstart-cloud/)
+* Cohere API key.
+* [⁠Ngrok installed on your system.](https://ngrok.com/docs/getting-started/)
+* OpenAI API key.
+* ⁠A working AWS account.
 
 ## Steps
-1. Create a clone of the repostitory on your local machine using the following command.
+* Create a clone of the repostitory on your local machine using the following command.
 ```
 git clone https://github.com/sinngam-khaidem/Realtyai-Whatsapp-Conversation-Agent.git
 ```
-2. Inside the project directory, create a python virtual environment.<br>
+* Inside the project directory, create a python virtual environment.<br>
 For **Windows**,
 ```
 python -m venv myvenv
@@ -39,7 +39,7 @@ For **Unix/MacOS**,
 ```
 python3 -m venv myvenv
 ```
-3. Activate the python virtual environment we just created.<br>
+* Activate the python virtual environment we just created.<br>
 For **Windows**,
 ```
 myvenv\Scripts\activate
@@ -48,7 +48,7 @@ For **Unix/MacOS**,
 ```
 source myvenv/bin/activate
 ```
-4. Install the required packages using the following command.
+* Install the required packages using the following command.
 ```
 pip install -r requirements.txt
 ```
@@ -56,29 +56,37 @@ or
 ```
 pip3 install -r requirements.txt
 ```
-5. Fill up the *environment_variables.txt* file and rename it to *.env*.
-Fill **VERIFY_TOKEN** field to "12345".
-6. Run the following command in the terminal to start the FastAPI server using Uvicorn.
+* Fill up the *environment_variables.txt* file and rename it to *.env*. Fill **VERIFY_TOKEN** field to "12345".
+
+* Run the following command in the terminal to start the FastAPI server using Uvicorn.
 ```
 uvicorn main:myapp --reload
 ```
 The application will start running at port 8000.
-7. In a separate terminal tab, run the following ngrok command to expose **localhost 8000**, so that it can be accessed from Whatsapp Cloud API.
+
+* In a separate terminal tab, run the following ngrok command to expose **localhost 8000**, so that it can be accessed from Whatsapp Cloud API.
 ```
 ngrok http 8000
 ```
-6. Copy the newly generated URL to clipboard and log into your Meta for Developer's account.
-7. Go to *My Apps*, open the Whatsapp Business App you created. The *API Setup* section will contain many useful informations.
+
+* Copy the newly generated URL to clipboard and log into your Meta for Developer's account.
+
+* Go to **My Apps**, open the Whatsapp Business App you created. The **API Setup** section will contain many useful informations.
 ![DEMO](Resources/steps/meta-7-1.png)
 ![DEMO](Resources/steps/meta-7-2.png)
 ![DEMO](Resources/steps/meta-7-3.png)
-8. Open *Configuration* from the left panel. From *Webhooks Field*, click *Manage*.
+
+* Open **Configuration** from the left panel. From **Webhooks Field**, click **Manage**.
 ![DEMO](Resources/steps/meta-8.png)
-9. Look for *messages* in the list and check it. Then click *Done*.
+
+* Look for *messages* in the list and check it. Then click *Done*.
 ![DEMO](Resources/steps/meta-9.png)
-10. Click on *Edit* from the *Callback URL* section.
+
+* Click on **Edit** from the **Callback URL** section.
 ![DEMO](Resources/steps/meta-10.png)
-11. Paste the ngrok URL generated earlier in the *Callback URl* field. Append "/webhook" after the URL. Fill "12345" in the *Verify Token* field. This has to be same with the **VERIFY_TOKEN** we set earlier.
+
+* Paste the ngrok URL generated earlier in the *Callback URl* field. Append "/webhook" after the URL. Fill "12345" in the **Verify Token** field. This has to be same with the **VERIFY_TOKEN** we set earlier.
 ![DEMO](Resources/steps/meta-11.png)
-12. You must recieve a notification of successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200OK response on the terminal where Ngrok is running.
+
+* You must recieve a notification of successful webhook subscription on the terminal where Uvicorn is running. You will also receive a 200OK response on the terminal where Ngrok is running.
 
