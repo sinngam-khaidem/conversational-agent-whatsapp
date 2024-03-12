@@ -26,7 +26,33 @@ This is another tool you can use to retrieve the files/URL that you shared back.
 6. ⁠A working AWS account.
 
 ## Steps
-1. Create a clone of the repostitory on your local machine using the following command:
+1. Create a clone of the repostitory on your local machine using the following command.
 ```
 git clone https://github.com/sinngam-khaidem/Realtyai-Whatsapp-Conversation-Agent.git
+```
+2. Inside the project directory, create a python virtual environment.
+For **Windows**,
+```
+python -m venv myvenv
+```
+For **Unix/MacOS**,
+```
+python3 -m venv myvenv
+```
+3. Activate the python virtual environment we just created.
+For **Windows**,
+```
+myvenv\Scripts\activate
+```
+For **Unix/MacOS**,
+```
+source myvenv/bin/activate
+```
+4. Install the required packages using the following command.
+```
+pip install -r requirements.txt
+```
+or
+```
+pip3 install -r requirements.txt
 ```
