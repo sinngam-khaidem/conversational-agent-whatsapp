@@ -48,6 +48,7 @@ class DynamoDBSessionManagement:
   
   def add_message(self, message: BaseMessage) -> None:
      """Append the message to the record in DynamoDB"""
+     # get_item() and put_item()
      messages = messages_to_dict(self.messages())
      _message = message_to_dict(message)
      messages.append(_message)

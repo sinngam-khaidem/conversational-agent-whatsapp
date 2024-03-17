@@ -1,25 +1,9 @@
-import requests
 import trafilatura
-from langchain_core.embeddings import Embeddings
-from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
 from langchain.docstore.document import Document
-import json
 from duckduckgo_search import DDGS
-import logging
 
-class DDGWithVectorSearchWrappper:
-    def __init__(
-        self, 
-        text_splitter: TextSplitter = RecursiveCharacterTextSplitter(
-                chunk_size = 1024, 
-                chunk_overlap = 30,
-                separators = ["\n\n", "\n", ".", ""],
-                length_function = len
-            ),
-        ):
-        self.text_splitter = text_splitter
-
+# https://pypi.org/project/duckduckgo-search/#1-text---text-search-by-duckduckgocom
+class DDGWrappper:
     def _get_content(self, url):
         downloaded = trafilatura.fetch_url(
                         url=url
@@ -31,6 +15,15 @@ class DDGWithVectorSearchWrappper:
         with DDGS() as ddgs:
             results = [r for r in ddgs.text(keywords = f"{query} -site:youtube.com", region="wt-wt", safesearch = "moderate", backend="api", max_results=page_result_count)]
             results_list = []
+            # Structure of each result from the search results is as follow:
+            # {
+            #     "href": "......",
+            #     "title": ".......",
+            #     "body": "Summary of the webpage"
+            # }
+            # Document schema in LlamaIndex and Langchain are little different.
+            # LlamaIndex document: Documet(text = "", metadata="")
+            # Langchain document: Documet(page_content = "", metadata="")
             for result in results:
                 link = result["href"]
                 title = result["title"]
@@ -40,7 +33,7 @@ class DDGWithVectorSearchWrappper:
             return results_list
 
 if __name__ == "__main__":
-    ddg = DDGWithVectorSearchWrappper()
+    ddg = DDGWrappper()
     result = ddg.quick_search("Tech specifications of Macbook pro M3 2023 model.")
     for item in result:
         print(item.page_content)
