@@ -1,12 +1,9 @@
 import requests
 import trafilatura
-from langchain_core.embeddings import Embeddings
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.docstore.document import Document
-import time
-import json
 import logging
 
 

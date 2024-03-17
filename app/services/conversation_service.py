@@ -16,7 +16,7 @@ from langchain.agents import AgentExecutor, create_openai_functions_agent
 import logging
 from langchain.globals import set_debug
 set_debug(False)
-from app.services.web_search_service.ddg_search_service import DDGWithVectorSearchWrappper
+from app.services.web_search_service.ddg_search_service import DDGWrappper
 from app.services.databases.qdrant_setup import (
     build_sentence_window_query_engine,
     build_index_retriever,
@@ -35,7 +35,7 @@ from app.services.general_utilities import (
 class RealtyaiBot:
     def __init__(
         self,
-        max_token_length: int = 1000,
+        max_token_length: int = 1000, # Max length of token to be stored as chat history
         senders_wa_id: str = None,
         openai_api_key: str = None,
         cohere_api_key:str = None,
@@ -182,7 +182,7 @@ class RealtyaiBot:
 
         try:
             result_str = ""
-            docs = DDGWithVectorSearchWrappper().quick_search(query, page_result_count=4)
+            docs = DDGWrappper().quick_search(query, page_result_count=4)
             for doc in docs:
                 result_str += "\n"+doc.page_content+"\n"
                 # if len(self.citations) < 2:
