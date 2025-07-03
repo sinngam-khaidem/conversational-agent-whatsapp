@@ -1,4 +1,4 @@
-# Realtyai-bot
+# Conversational Agent
 This is a conversation agent powered by OpenAI, Langchain, and Qdrant vector database.
 The agent has access to three tools(currently): Web Search tool, RAG(Retrieval Augmented Generation) tool to answer questions from PDFs and links that you shared, and  Retrieval tool for those PDFs and links.
 
