@@ -3,6 +3,7 @@ This is a conversation agent powered by OpenAI, Langchain, and Qdrant vector dat
 The agent has access to three tools(currently): Web Search tool, RAG(Retrieval Augmented Generation) tool to answer questions from PDFs and links that you shared, and  Retrieval tool for those PDFs and links.
 
 ![DEMO](Resources/diagrams/realtyai-bot.PNG)
+![DEMO](Resources/diagrams/chatbot_architecture.png)
 
 ## Things you can do with the bot
 ### 1. Web Search 
